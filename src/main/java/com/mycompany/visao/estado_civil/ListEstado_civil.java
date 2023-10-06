@@ -2,13 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.mycompany.visao.pais;
+package com.mycompany.visao.estado_civil;
 
-import com.mycompany.visao.pais.*;
-import com.mycompany.dao.DaoPais;
+import com.mycompany.visao.estado_civil.*;
+import com.mycompany.dao.DaoEstado_civil;
 import com.mycompany.ferramentas.DadosTemporarios;
-import com.mycompany.modelo.ModPais;
-import com.mycompany.visao.pais.CadPais;
+import com.mycompany.modelo.ModEstado_civil;
+import com.mycompany.visao.estado_civil.CadEstado_civil;
 import java.sql.ResultSet;
 import javax.swing.table.DefaultTableModel;
 
@@ -16,12 +16,12 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author leonardo.35903
  */
-public class ListPais extends javax.swing.JFrame {
+public class ListEstado_civil extends javax.swing.JFrame {
 
     /**
      * Creates new form CadCategoria
      */
-    public ListPais() {
+    public ListEstado_civil() {
         initComponents();
         
         setLocationRelativeTo(null);
@@ -31,13 +31,13 @@ public class ListPais extends javax.swing.JFrame {
 
     public void listarTodos(){
         try{
-            DefaultTableModel defaultTableModel = (DefaultTableModel) tablePais.getModel();
+            DefaultTableModel defaultTableModel = (DefaultTableModel) tableEstado_civil.getModel();
             
-            tablePais.setModel(defaultTableModel);
+            tableEstado_civil.setModel(defaultTableModel);
             
-            DaoPais daoPais = new DaoPais();
+            DaoEstado_civil daoEstado_civil = new DaoEstado_civil();
             
-            ResultSet resultSet = daoPais.listarTodos();
+            ResultSet resultSet = daoEstado_civil.listarTodos();
             
             defaultTableModel.setRowCount(0);
             while (resultSet.next()){
@@ -58,11 +58,11 @@ public class ListPais extends javax.swing.JFrame {
             defaultTableModel.addColumn("ID");
             defaultTableModel.addColumn("NOME");
 
-            tablePais.setModel(defaultTableModel);
+            tableEstado_civil.setModel(defaultTableModel);
 
-            DaoPais daoPais = new DaoPais();
+            DaoEstado_civil daoEstado_civil = new DaoEstado_civil();
 
-            ResultSet resultSet = daoPais.listarPorId(pId);
+            ResultSet resultSet = daoEstado_civil.listarPorId(pId);
             
             defaultTableModel.setRowCount(0);
             while (resultSet.next()){
@@ -84,12 +84,12 @@ public class ListPais extends javax.swing.JFrame {
             defaultTableModel.addColumn("ID");
             defaultTableModel.addColumn("NOME");
             
-            tablePais.setModel(defaultTableModel);
+            tableEstado_civil.setModel(defaultTableModel);
 
-            DaoPais daoPais = new DaoPais();
+            DaoEstado_civil daoEstado_civil = new DaoEstado_civil();
 
             //Atribui o resultset retornado a uma variável para ser usada.
-            ResultSet resultSet = daoPais.listarPorNome(pNome);
+            ResultSet resultSet = daoEstado_civil.listarPorNome(pNome);
             
             defaultTableModel.setRowCount(0);
             while (resultSet.next()){
@@ -117,14 +117,14 @@ public class ListPais extends javax.swing.JFrame {
         jcbTipoFiltro = new javax.swing.JComboBox<>();
         tfFiltro = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tablePais = new javax.swing.JTable();
+        tableEstado_civil = new javax.swing.JTable();
         btnBuscar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jcbTipoFiltro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "TODOS", "ID", "NOME" }));
 
-        tablePais.setModel(new javax.swing.table.DefaultTableModel(
+        tableEstado_civil.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -140,12 +140,12 @@ public class ListPais extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tablePais.addMouseListener(new java.awt.event.MouseAdapter() {
+        tableEstado_civil.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tablePaisMouseClicked(evt);
+                tableEstado_civilMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(tablePais);
+        jScrollPane1.setViewportView(tableEstado_civil);
 
         btnBuscar.setText("Buscar");
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
@@ -221,20 +221,20 @@ public class ListPais extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnBuscarActionPerformed
 
-    private void tablePaisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablePaisMouseClicked
+    private void tableEstado_civilMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableEstado_civilMouseClicked
         // TODO add your handling code here:
          if (evt.getClickCount() == 2){
-             ModPais modPais = new ModPais();
+             ModEstado_civil modEstado_civil = new ModEstado_civil();
 
-            modPais.setId(Integer.parseInt(String.valueOf(tablePais.getValueAt(tablePais.getSelectedRow(), 0))));
-            modPais.setNome(String.valueOf(tablePais.getValueAt(tablePais.getSelectedRow(), 1)));
+            modEstado_civil.setId(Integer.parseInt(String.valueOf(tableEstado_civil.getValueAt(tableEstado_civil.getSelectedRow(), 0))));
+            modEstado_civil.setNome(String.valueOf(tableEstado_civil.getValueAt(tableEstado_civil.getSelectedRow(), 1)));
 
-             DadosTemporarios.temObject = (ModPais) modPais;
+             DadosTemporarios.temObject = (ModEstado_civil) modEstado_civil;
 
-             CadPais cadPais = new CadPais();
-            cadPais.setVisible(true);
+             CadEstado_civil cadEstado_civil = new CadEstado_civil();
+            cadEstado_civil.setVisible(true);
          }
-    }//GEN-LAST:event_tablePaisMouseClicked
+    }//GEN-LAST:event_tableEstado_civilMouseClicked
 
     /**
      * @param args the command line arguments
@@ -253,14 +253,18 @@ public class ListPais extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ListPais.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ListEstado_civil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ListPais.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ListEstado_civil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ListPais.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ListEstado_civil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ListPais.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ListEstado_civil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -269,7 +273,7 @@ public class ListPais extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ListPais().setVisible(true);
+                new ListEstado_civil().setVisible(true);
             }
         });
     }
@@ -279,7 +283,7 @@ public class ListPais extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JComboBox<String> jcbTipoFiltro;
-    private javax.swing.JTable tablePais;
+    private javax.swing.JTable tableEstado_civil;
     private javax.swing.JTextField tfFiltro;
     // End of variables declaration//GEN-END:variables
 }

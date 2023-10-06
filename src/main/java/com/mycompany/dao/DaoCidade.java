@@ -16,20 +16,19 @@ import java.sql.ResultSet;
  *
  * @author jose_
  */
-public class DaoEstado extends BancoDeDadosMySql{
+public class DaoCidade extends BancoDeDadosMySql{
     
     private String sql; 
     
-    public Boolean inserir(int id, int id_pais, String nome, String uf){
+    public Boolean inserir(int id, int id_estado, String nome){
         try{
-            sql = "INSERT INTO ESTADO (ID, ID_PAIS, NOME, UF) VALUES (?, ?, ?, ?)";
+            sql = "INSERT INTO CIDADE (ID, ID_ESTADO, NOME) VALUES (?, ?, ?)";
             
             setStatement(getConexao().prepareStatement(sql));
             
             getStatement().setInt(1, id);
-            getStatement().setInt(2, id_pais);
+            getStatement().setInt(2, id_estado);
             getStatement().setString(3, nome);
-            getStatement().setString(4, uf);
             
             getStatement().executeUpdate();
             
@@ -40,16 +39,15 @@ public class DaoEstado extends BancoDeDadosMySql{
         }
     }
     
-    public Boolean alterar(int id, String novoNome, int novoId_pais, String novoUf){
+    public Boolean alterar(int id, String novoNome, int novoId_estado){
         try{
-            sql = "UPDATE ESTADO SET ID_PAIS = ?, NOME = ?, UF = ? WHERE ID = ?";
+            sql = "UPDATE CIDADE SET ID_ESTADO = ?, NOME = ? = ? WHERE ID = ?";
             
             setStatement(getConexao().prepareStatement(sql));
             
             getStatement().setInt(3, id);
-            getStatement().setInt(1, novoId_pais);
+            getStatement().setInt(1, novoId_estado);
             getStatement().setString(2, novoNome);
-            getStatement().setString(4, novoUf);
             
             getStatement().executeUpdate();
             
@@ -62,7 +60,7 @@ public class DaoEstado extends BancoDeDadosMySql{
     
     public Boolean excluir(int id){
         try{
-            sql = "DELETE FROM ESTADO WHERE ID = ?";
+            sql = "DELETE FROM CIDADE WHERE ID = ?";
             
             setStatement(getConexao().prepareStatement(sql));
             
@@ -79,7 +77,7 @@ public class DaoEstado extends BancoDeDadosMySql{
     
     public ResultSet listarTodos(){
         try{
-            sql = "SELECT ID, ID_PAIS, NOME, UF FROM ESTADO";
+            sql = "SELECT ID, ID_ESTADO, NOME FROM CIDADE";
             
             setStatement(getConexao().prepareStatement(sql));
             
@@ -93,7 +91,7 @@ public class DaoEstado extends BancoDeDadosMySql{
     
     public ResultSet listarPorId(int id){
         try{
-            sql = "SELECT ID, ID_PAIS, NOME, UF FROM ESTADO WHERE ID = ?";
+            sql = "SELECT ID, ID_ESTADO, NOME FROM CIDADE WHERE ID = ?";
             
             setStatement(getConexao().prepareStatement(sql));
             
@@ -109,7 +107,7 @@ public class DaoEstado extends BancoDeDadosMySql{
     
     public ResultSet listarPorNome(String nome){
         try{
-            sql = "SELECT ID, ID_PAIS, NOME, UF FROM ESTADO WHERE NOME LIKE ?";
+            sql = "SELECT ID, ID_ESTADO, NOME FROM CIDADE WHERE NOME LIKE ?";
             
             setStatement(getConexao().prepareStatement(sql));
             
@@ -123,29 +121,13 @@ public class DaoEstado extends BancoDeDadosMySql{
         return getResultado();
     }
     
-    public ResultSet listarPorPais(int id_pais){
+    public ResultSet listarPorEstado(int id_estado){
         try{
-            sql = "SELECT ID, ID_PAIS, NOME, UF FROM ESTADO WHERE ID_PAIS = ?";
+            sql = "SELECT ID, ID_ESTADO, NOME FROM CIDADE WHERE ID_ESTADO = ?";
             
             setStatement(getConexao().prepareStatement(sql));
             
-            getStatement().setInt(1, id_pais);
-            
-            setResultado(getStatement().executeQuery());
-        }catch(Exception e){
-            System.out.println(e.getMessage());
-        }
-        
-        return getResultado();
-    }
-    
-    public ResultSet listarPorUf(String uf){
-        try{
-            sql = "SELECT ID, ID_PAIS, NOME, UF FROM ESTADO WHERE UF LIKE ?";
-            
-            setStatement(getConexao().prepareStatement(sql));
-            
-            getStatement().setString(1, uf + "%");
+            getStatement().setInt(1, id_estado);
             
             setResultado(getStatement().executeQuery());
         }catch(Exception e){
@@ -159,7 +141,7 @@ public class DaoEstado extends BancoDeDadosMySql{
         int id = -1;
         
         try{
-            sql = "SELECT MAX(ID) + 1 FROM ESTADO";
+            sql = "SELECT MAX(ID) + 1 FROM CIDADE";
             
             setStatement(getConexao().prepareStatement(sql));
             
