@@ -17,4 +17,16 @@ public class Formularios {
     public static JFrame listCidade;
     public static JFrame cadEstado_civil;
     public static JFrame listEstado_civil;
+    public static JFrame cadEndereco;
+    public static JFrame listEndereco;
+    public static JFrame cadMarca;
+    public static JFrame listMarca;
+    public static JFrame cadProduto;
+    public static JFrame listProduto;
+    public static JFrame cadPessoa;
+    public static JFrame listPessoa;
+    public static JFrame cadPedido;
+    public static JFrame listPedido;
+    public static JFrame cadCliente;
+    public static JFrame listCliente;
 }

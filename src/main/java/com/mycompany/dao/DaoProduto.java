@@ -16,21 +16,21 @@ import java.sql.ResultSet;
  *
  * @author jose_
  */
-public class DaoEndereco extends BancoDeDadosMySql{
+public class DaoProduto extends BancoDeDadosMySql{
     
     private String sql; 
     
-    public Boolean inserir(int id, int id_cidade, String nome_rua, int cep, int numero_residencia){
+    public Boolean inserir(int id, int id_categoria, int id_marca, String nome, String descricao, float preco){
         try{
-            sql = "INSERT INTO ENDERECO (ID, ID_CIDADE, NOME_RUA, CEP, NUMERO_RESIDENCIA) VALUES (?, ?, ?, ?, ?)";
+            sql = "INSERT INTO PRODUTO (ID, ID_CATEGORIA, ID_MARCA, NOME, DESCRICAO, PRECO) VALUES (?, ?, ?, ?, ?, ?)";
             
             setStatement(getConexao().prepareStatement(sql));
             
             getStatement().setInt(1, id);
-            getStatement().setInt(2, id_cidade);
-            getStatement().setString(3, nome_rua);
-            getStatement().setInt(4, cep);
-            getStatement().setInt(5, numero_residencia);
+            getStatement().setInt(2, id_categoria);
+            getStatement().setString(3, nome);
+            getStatement().setString(4, descricao);
+            getStatement().setFloat(5, preco);
             
             getStatement().executeUpdate();
             
@@ -41,17 +41,17 @@ public class DaoEndereco extends BancoDeDadosMySql{
         }
     }
     
-    public Boolean alterar(int id, int novoId_cidade, String novoNome_rua, int novoCep, int novoNumero_residencia){
+    public Boolean alterar(int id, int novoId_categoria, int novoId_marca, String novoNome, String novoDescricao, float novoPreco){
         try{
-            sql = "UPDATE ENDERECO SET ID_CIDADE = ?, NOME = ?, UF = ? WHERE ID = ?";
+            sql = "UPDATE PRODUTO SET ID_CATEGORIA = ?, ID_MARCA = ?, NOME = ?, DESCRICAO = ?, PRECO = ? WHERE ID = ?";
             
             setStatement(getConexao().prepareStatement(sql));
             
             getStatement().setInt(5, id);
-            getStatement().setInt(1, novoId_cidade);
-            getStatement().setString(2, novoNome_rua);
-            getStatement().setInt(3, novoCep);
-            getStatement().setInt(4, novoNumero_residencia);
+            getStatement().setInt(1, novoId_categoria);
+            getStatement().setString(2, novoNome);
+            getStatement().setString(3, novoDescricao);
+            getStatement().setFloat(4, novoPreco);
             
             getStatement().executeUpdate();
             
@@ -64,7 +64,7 @@ public class DaoEndereco extends BancoDeDadosMySql{
     
     public Boolean excluir(int id){
         try{
-            sql = "DELETE FROM ENDERECO WHERE ID = ?";
+            sql = "DELETE FROM PRODUTO WHERE ID = ?";
             
             setStatement(getConexao().prepareStatement(sql));
             
@@ -81,7 +81,7 @@ public class DaoEndereco extends BancoDeDadosMySql{
     
     public ResultSet listarTodos(){
         try{
-            sql = "SELECT ID, ID_CIDADE, NOME_RUA, CEP, NUMERO_RESIDENCIA FROM ENDERECO";
+            sql = "SELECT ID, ID_CATEGORIA, ID_MARCA, NOME, DESCRICAO, PRECO FROM PRODUTO";
             
             setStatement(getConexao().prepareStatement(sql));
             
@@ -95,7 +95,7 @@ public class DaoEndereco extends BancoDeDadosMySql{
     
     public ResultSet listarPorId(int id){
         try{
-            sql = "SELECT ID, ID_CIDADE, NOME_RUA, CEP, NUMERO_RESIDENCIA FROM ENDERECO WHERE ID = ?";
+            sql = "SELECT ID, ID_CATEGORIA, ID_MARCA, NOME, DESCRICAO, PRECO FROM PRODUTO WHERE ID = ?";
             
             setStatement(getConexao().prepareStatement(sql));
             
@@ -111,7 +111,7 @@ public class DaoEndereco extends BancoDeDadosMySql{
     
     public ResultSet listarPorNome(String nome){
         try{
-            sql = "SELECT ID, ID_CIDADE, NOME_RUA, CEP, NUMERO_RESIDENCIA FROM ENDERECO WHERE NOME LIKE ?";
+            sql = "SELECT ID, ID_CATEGORIA, ID_MARCA, NOME, DESCRICAO, PRECO FROM PRODUTO WHERE NOME LIKE ?";
             
             setStatement(getConexao().prepareStatement(sql));
             
@@ -125,13 +125,13 @@ public class DaoEndereco extends BancoDeDadosMySql{
         return getResultado();
     }
     
-    public ResultSet listarPorCidade(int id_cidade){
+    public ResultSet listarPorCategoria(int id_categoria){
         try{
-            sql = "SELECT ID, ID_CIDADE, NOME_RUA, CEP, NUMERO_RESIDENCIA FROM ENDERECO WHERE ID_CIDADE = ?";
+            sql = "SELECT ID, ID_CATEGORIA, ID_MARCA, NOME, DESCRICAO, PRECO FROM PRODUTO WHERE ID_CATEGORIA = ?";
             
             setStatement(getConexao().prepareStatement(sql));
             
-            getStatement().setInt(1, id_cidade);
+            getStatement().setInt(1, id_categoria);
             
             setResultado(getStatement().executeQuery());
         }catch(Exception e){
@@ -141,13 +141,13 @@ public class DaoEndereco extends BancoDeDadosMySql{
         return getResultado();
     }
     
-    public ResultSet listarPorCep(String cep){
+    public ResultSet listarPorMarca(int cep){
         try{
-            sql = "SELECT ID, ID_CIDADE, NOME_RUA, CEP, NUMERO_RESIDENCIA FROM ENDERECO WHERE CEP LIKE ?";
+            sql = "SELECT ID, ID_CATEGORIA, ID_MARCA, NOME, DESCRICAO, PRECO FROM PRODUTO WHERE MARCA = ?";
             
             setStatement(getConexao().prepareStatement(sql));
             
-            getStatement().setString(1, cep + "%");
+            getStatement().setInt(1, cep);
             
             setResultado(getStatement().executeQuery());
         }catch(Exception e){
@@ -157,13 +157,13 @@ public class DaoEndereco extends BancoDeDadosMySql{
         return getResultado();
     }
     
-        public ResultSet listarPorNumero(int nome_rua){
+        public ResultSet listarPorDescricao(String descricao){
         try{
-            sql = "SELECT ID, ID_CIDADE, NOME_RUA, CEP, NUMERO_RESIDENCIA FROM ENDERECO WHERE NUMERO_RESIDENCIA = ?";
+            sql = "SELECT ID, ID_CATEGORIA, ID_MARCA, NOME, DESCRICAO, PRECO FROM PRODUTO WHERE NUMERO_RESIDENCIA = ?";
             
             setStatement(getConexao().prepareStatement(sql));
             
-            getStatement().setInt(1, nome_rua);
+            getStatement().setString(1, descricao + "%");
             
             setResultado(getStatement().executeQuery());
         }catch(Exception e){
@@ -177,7 +177,7 @@ public class DaoEndereco extends BancoDeDadosMySql{
         int id = -1;
         
         try{
-            sql = "SELECT MAX(ID) + 1 FROM ENDERECO";
+            sql = "SELECT MAX(ID) + 1 FROM PRODUTO";
             
             setStatement(getConexao().prepareStatement(sql));
             
