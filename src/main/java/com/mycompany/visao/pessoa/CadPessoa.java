@@ -229,6 +229,22 @@ public class CadPessoa extends javax.swing.JFrame {
         }
     }
     
+    private void alterarCliente(){
+        DaoPessoa daoPessoa = new DaoPessoa();
+        
+        if (daoPessoa.alterar(Integer.parseInt(tfIdPessoa.getText()), Integer.parseInt(tfIdEndereco.getText()), Integer.parseInt(tfIdEstadoCivil.getText()), tfNome.getText(), tfSobrenome.getText(), (String) jcbGenero.getSelectedItem(), tfTelefone.getText(), tfEmail.getText())){
+            JOptionPane.showMessageDialog(null, "Pessoa alterada com sucesso!");
+            
+            //tfIdEndereco.setText(String.valueOf(daoEndereco.buscarProximoId()));          
+            tfNome.setText("");
+            tfSobrenome.setText("");
+            tfTelefone.setText("");
+            tfEmail.setText("");
+        }else{
+            JOptionPane.showMessageDialog(null, "Não foi possível alterar a pessoa!");
+        }
+    }
+    
     private void excluir(){
         DaoPessoa daoPessoa = new DaoPessoa();
         
@@ -631,9 +647,11 @@ public class CadPessoa extends javax.swing.JFrame {
     private void btnAcaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcaoActionPerformed
         if(camposObrigatoriosPreenchidos(new JTextField[]{tfRua, tfCep, tfNumero, tfNome, tfSobrenome, tfTelefone, tfEmail})){
             if (btnAcao.getText() == Constantes.BTN_SALVAR_TEXT){
+                inserirCliente();
                 inserirEndereco();
                 inserir();
-            }else if (btnAcao.getText() == Constantes.BTN_ALTERAR_TEXT){            
+            }else if (btnAcao.getText() == Constantes.BTN_ALTERAR_TEXT){  
+                alterarCliente();
                 alterarEndereco();
                 alterar();
             }

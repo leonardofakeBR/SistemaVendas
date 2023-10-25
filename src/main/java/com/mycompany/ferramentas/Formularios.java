@@ -49,4 +49,8 @@ public class Formularios {
     //Cliente
     public static JFrame cadCliente;
     public static JFrame listCliente;
+    
+    //produto
+    public static JFrame cadProduto;
+    public static JFrame listProduto;
 }

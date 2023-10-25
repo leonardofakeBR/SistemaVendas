@@ -14,6 +14,8 @@ import com.mycompany.visao.endereco.CadEndereco;
 import com.mycompany.visao.endereco.ListEndereco;
 import com.mycompany.visao.estado.CadEstado;
 import com.mycompany.visao.estado.ListEstado;
+import com.mycompany.visao.estadocivil.CadEstadoCivil;
+import com.mycompany.visao.estadocivil.ListEstadoCivil;
 import com.mycompany.visao.marca.CadMarca;
 import com.mycompany.visao.marca.ListMarca;
 import com.mycompany.visao.pais.CadPais;
@@ -333,10 +335,18 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
     private void miCadastroEstadoCivilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miCadastroEstadoCivilActionPerformed
         // TODO add your handling code here:
+        if (Formularios.cadEstadoCivil == null)
+            Formularios.cadEstadoCivil = new CadEstadoCivil();
+        
+        Formularios.cadEstadoCivil.setVisible(true);
     }//GEN-LAST:event_miCadastroEstadoCivilActionPerformed
 
     private void miConsultaEstadoCivilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miConsultaEstadoCivilActionPerformed
         // TODO add your handling code here:
+        if (Formularios.listEstadoCivil == null)
+            Formularios.listEstadoCivil = new ListEstadoCivil();
+        
+        Formularios.listEstadoCivil.setVisible(true);
     }//GEN-LAST:event_miConsultaEstadoCivilActionPerformed
 
     /**
