@@ -4,7 +4,10 @@
  */
 package com.mycompany.ferramentas;
 
-
+/**
+ *
+ * @author 10156
+ */
 public class Constantes {
     public static String BTN_SALVAR_TEXT = "Salvar";
     public static String BTN_ALTERAR_TEXT = "Alterar";

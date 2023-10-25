@@ -5,29 +5,23 @@
 package com.mycompany.dao;
 
 import com.mycompany.ferramentas.BancoDeDadosMySql;
-import static com.mycompany.ferramentas.BancoDeDadosMySql.getConexao;
-import static com.mycompany.ferramentas.BancoDeDadosMySql.getResultado;
-import static com.mycompany.ferramentas.BancoDeDadosMySql.getStatement;
-import static com.mycompany.ferramentas.BancoDeDadosMySql.setResultado;
-import static com.mycompany.ferramentas.BancoDeDadosMySql.setStatement;
 import java.sql.ResultSet;
 
 /**
  *
  * @author jose_
  */
-public class DaoEstado_civil extends BancoDeDadosMySql{
-    
+public class DaoCliente extends BancoDeDadosMySql{
     private String sql; 
     
-    public Boolean inserir(int id, String nome){
+    public Boolean inserir(int id, int id_pessoa){
         try{
-            sql = "INSERT INTO ESTADO_CIVIL (ID, NOME) VALUES (?, ?)";
+            sql = "INSERT INTO CLIENTE (ID, ID_PESSOA) VALUES (?, ?)";
             
             setStatement(getConexao().prepareStatement(sql));
             
             getStatement().setInt(1, id);
-            getStatement().setString(2, nome);
+            getStatement().setInt(2, id_pessoa);
             
             getStatement().executeUpdate();
             
@@ -38,14 +32,14 @@ public class DaoEstado_civil extends BancoDeDadosMySql{
         }
     }
     
-    public Boolean alterar(int id, String novoNome){
+    public Boolean alterar(int id, int novoId_pessoa){
         try{
-            sql = "UPDATE ESTADO_CIVIL SET NOME = ? WHERE ID = ?";
+            sql = "UPDATE CLIENTE SET ID_PESSOA = ? WHERE ID = ?";
             
             setStatement(getConexao().prepareStatement(sql));
             
-            getStatement().setInt(3, id);
-            getStatement().setString(1, novoNome);
+            getStatement().setInt(2, id);
+            getStatement().setInt(1, novoId_pessoa);
             
             getStatement().executeUpdate();
             
@@ -58,7 +52,7 @@ public class DaoEstado_civil extends BancoDeDadosMySql{
     
     public Boolean excluir(int id){
         try{
-            sql = "DELETE FROM ESTADO_CIVIL WHERE ID = ?";
+            sql = "DELETE FROM CLIENTE WHERE ID = ?";
             
             setStatement(getConexao().prepareStatement(sql));
             
@@ -75,7 +69,7 @@ public class DaoEstado_civil extends BancoDeDadosMySql{
     
     public ResultSet listarTodos(){
         try{
-            sql = "SELECT ID, NOME FROM ESTADO_CIVIL";
+            sql = "SELECT ID, ID_PESSOA FROM CLIENTE";
             
             setStatement(getConexao().prepareStatement(sql));
             
@@ -89,7 +83,7 @@ public class DaoEstado_civil extends BancoDeDadosMySql{
     
     public ResultSet listarPorId(int id){
         try{
-            sql = "SELECT ID, NOME FROM ESTADO_CIVIL WHERE ID = ?";
+            sql = "SELECT ID, ID_PESSOA FROM CLIENTE WHERE ID = ?";
             
             setStatement(getConexao().prepareStatement(sql));
             
@@ -103,13 +97,13 @@ public class DaoEstado_civil extends BancoDeDadosMySql{
         return getResultado();
     }
     
-    public ResultSet listarPorNome(String nome){
+    public ResultSet listarPorPessoa(int id_pessoa){
         try{
-            sql = "SELECT ID, NOME FROM ESTADO_CIVIL WHERE NOME LIKE ?";
+            sql = "SELECT ID, ID_PESSOA FROM CLIENTE WHERE ID_PESSOA = ?";
             
             setStatement(getConexao().prepareStatement(sql));
             
-            getStatement().setString(1, nome + "%");
+            getStatement().setInt(1, id_pessoa);
             
             setResultado(getStatement().executeQuery());
         }catch(Exception e){
@@ -120,10 +114,10 @@ public class DaoEstado_civil extends BancoDeDadosMySql{
     }
     
     public int buscarProximoId(){
-        int id = -1;
+        int id = 0;
         
         try{
-            sql = "SELECT MAX(ID) + 1 FROM ESTADO_CIVIL";
+            sql = "SELECT IFNULL(MAX(ID), 0) + 1 FROM CLIENTE";
             
             setStatement(getConexao().prepareStatement(sql));
             

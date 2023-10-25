@@ -8,6 +8,7 @@ import com.mycompany.visao.marca.*;
 import com.mycompany.visao.marca.*;
 import com.mycompany.dao.DaoMarca;
 import com.mycompany.ferramentas.DadosTemporarios;
+import com.mycompany.ferramentas.Formularios;
 import com.mycompany.modelo.ModMarca;
 import com.mycompany.visao.marca.CadMarca;
 import java.sql.ResultSet;
@@ -207,6 +208,10 @@ public class ListMarca extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {                                  
+        Formularios.listEstado = null;
+    }
+    
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
         switch (jcbTipoFiltro.getSelectedIndex()){
@@ -230,7 +235,7 @@ public class ListMarca extends javax.swing.JFrame {
             modMarca.setId(Integer.parseInt(String.valueOf(tableMarca.getValueAt(tableMarca.getSelectedRow(), 0))));
             modMarca.setNome(String.valueOf(tableMarca.getValueAt(tableMarca.getSelectedRow(), 1)));
 
-             DadosTemporarios.temObject = (ModMarca) modMarca;
+             DadosTemporarios.tempObject = (ModMarca) modMarca;
 
              CadMarca cadMarca = new CadMarca();
             cadMarca.setVisible(true);

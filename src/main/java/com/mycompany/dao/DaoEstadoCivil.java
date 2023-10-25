@@ -16,21 +16,17 @@ import java.sql.ResultSet;
  *
  * @author jose_
  */
-public class DaoProduto extends BancoDeDadosMySql{
-    
+public class DaoEstadoCivil extends BancoDeDadosMySql{
     private String sql; 
     
-    public Boolean inserir(int id, int id_categoria, int id_marca, String nome, String descricao, float preco){
+    public Boolean inserir(int id, String nome){
         try{
-            sql = "INSERT INTO PRODUTO (ID, ID_CATEGORIA, ID_MARCA, NOME, DESCRICAO, PRECO) VALUES (?, ?, ?, ?, ?, ?)";
+            sql = "INSERT INTO ESTADO_CIVIL (ID, NOME) VALUES (?, ?)";
             
             setStatement(getConexao().prepareStatement(sql));
             
             getStatement().setInt(1, id);
-            getStatement().setInt(2, id_categoria);
-            getStatement().setString(3, nome);
-            getStatement().setString(4, descricao);
-            getStatement().setFloat(5, preco);
+            getStatement().setString(2, nome);
             
             getStatement().executeUpdate();
             
@@ -41,17 +37,14 @@ public class DaoProduto extends BancoDeDadosMySql{
         }
     }
     
-    public Boolean alterar(int id, int novoId_categoria, int novoId_marca, String novoNome, String novoDescricao, float novoPreco){
+    public Boolean alterar(int id, String novoNome){
         try{
-            sql = "UPDATE PRODUTO SET ID_CATEGORIA = ?, ID_MARCA = ?, NOME = ?, DESCRICAO = ?, PRECO = ? WHERE ID = ?";
+            sql = "UPDATE ESTADO_CIVIL SET NOME = ? WHERE ID = ?";
             
             setStatement(getConexao().prepareStatement(sql));
             
-            getStatement().setInt(5, id);
-            getStatement().setInt(1, novoId_categoria);
-            getStatement().setString(2, novoNome);
-            getStatement().setString(3, novoDescricao);
-            getStatement().setFloat(4, novoPreco);
+            getStatement().setInt(2, id);
+            getStatement().setString(1, novoNome);
             
             getStatement().executeUpdate();
             
@@ -64,7 +57,7 @@ public class DaoProduto extends BancoDeDadosMySql{
     
     public Boolean excluir(int id){
         try{
-            sql = "DELETE FROM PRODUTO WHERE ID = ?";
+            sql = "DELETE FROM ESTADO_CIVIL WHERE ID = ?";
             
             setStatement(getConexao().prepareStatement(sql));
             
@@ -81,7 +74,7 @@ public class DaoProduto extends BancoDeDadosMySql{
     
     public ResultSet listarTodos(){
         try{
-            sql = "SELECT ID, ID_CATEGORIA, ID_MARCA, NOME, DESCRICAO, PRECO FROM PRODUTO";
+            sql = "SELECT ID, NOME FROM ESTADO_CIVIL";
             
             setStatement(getConexao().prepareStatement(sql));
             
@@ -95,7 +88,7 @@ public class DaoProduto extends BancoDeDadosMySql{
     
     public ResultSet listarPorId(int id){
         try{
-            sql = "SELECT ID, ID_CATEGORIA, ID_MARCA, NOME, DESCRICAO, PRECO FROM PRODUTO WHERE ID = ?";
+            sql = "SELECT ID, NOME FROM ESTADO_CIVIL WHERE ID = ?";
             
             setStatement(getConexao().prepareStatement(sql));
             
@@ -111,7 +104,7 @@ public class DaoProduto extends BancoDeDadosMySql{
     
     public ResultSet listarPorNome(String nome){
         try{
-            sql = "SELECT ID, ID_CATEGORIA, ID_MARCA, NOME, DESCRICAO, PRECO FROM PRODUTO WHERE NOME LIKE ?";
+            sql = "SELECT ID, NOME FROM ESTADO_CIVIL WHERE NOME LIKE ?";
             
             setStatement(getConexao().prepareStatement(sql));
             
@@ -125,59 +118,11 @@ public class DaoProduto extends BancoDeDadosMySql{
         return getResultado();
     }
     
-    public ResultSet listarPorCategoria(int id_categoria){
-        try{
-            sql = "SELECT ID, ID_CATEGORIA, ID_MARCA, NOME, DESCRICAO, PRECO FROM PRODUTO WHERE ID_CATEGORIA = ?";
-            
-            setStatement(getConexao().prepareStatement(sql));
-            
-            getStatement().setInt(1, id_categoria);
-            
-            setResultado(getStatement().executeQuery());
-        }catch(Exception e){
-            System.out.println(e.getMessage());
-        }
-        
-        return getResultado();
-    }
-    
-    public ResultSet listarPorMarca(int cep){
-        try{
-            sql = "SELECT ID, ID_CATEGORIA, ID_MARCA, NOME, DESCRICAO, PRECO FROM PRODUTO WHERE MARCA = ?";
-            
-            setStatement(getConexao().prepareStatement(sql));
-            
-            getStatement().setInt(1, cep);
-            
-            setResultado(getStatement().executeQuery());
-        }catch(Exception e){
-            System.out.println(e.getMessage());
-        }
-        
-        return getResultado();
-    }
-    
-        public ResultSet listarPorDescricao(String descricao){
-        try{
-            sql = "SELECT ID, ID_CATEGORIA, ID_MARCA, NOME, DESCRICAO, PRECO FROM PRODUTO WHERE NUMERO_RESIDENCIA = ?";
-            
-            setStatement(getConexao().prepareStatement(sql));
-            
-            getStatement().setString(1, descricao + "%");
-            
-            setResultado(getStatement().executeQuery());
-        }catch(Exception e){
-            System.out.println(e.getMessage());
-        }
-        
-        return getResultado();
-    }
-    
     public int buscarProximoId(){
-        int id = -1;
+        int id = 0;
         
         try{
-            sql = "SELECT MAX(ID) + 1 FROM PRODUTO";
+            sql = "SELECT IFNULL(MAX(ID), 0) + 1 FROM ESTADO_CIVIL";
             
             setStatement(getConexao().prepareStatement(sql));
             

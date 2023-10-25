@@ -4,29 +4,36 @@
  */
 package com.mycompany.visao.endereco;
 
-import com.mycompany.visao.endereco.*;
-import com.mycompany.visao.endereco.*;
-import com.mycompany.visao.endereco.*;
+import com.mycompany.dao.DaoCidade;
+import com.mycompany.dao.DaoEndereco;
+import com.mycompany.dao.DaoEstado;
+import com.mycompany.dao.DaoPais;
 import com.mycompany.ferramentas.Constantes;
 import com.mycompany.ferramentas.DadosTemporarios;
 import com.mycompany.ferramentas.Formularios;
-import com.mycompany.dao.DaoEndereco;
 import com.mycompany.modelo.ModEndereco;
+import com.mycompany.modelo.ModEstado;
+import com.mycompany.visao.cidade.ListCidade;
+import com.mycompany.visao.estado.ListEstado;
+import java.sql.ResultSet;
 import javax.swing.JOptionPane;
+
 /**
  *
- * @author leonardo.35903
+ * @author jose_
  */
 public class CadEndereco extends javax.swing.JFrame {
 
     /**
-     * Creates new form ListCategoria
+     * Creates new form CadEndereco
      */
     public CadEndereco() {
         initComponents();
         
-                if(!existeDadosTemporarios()){
-                    DaoEndereco daoEndereco = new DaoEndereco();
+        carregarCidades();
+        
+        if(!existeDadosTemporarios()){
+            DaoEndereco daoEndereco = new DaoEndereco();
 
             int id = daoEndereco.buscarProximoId(); 
             if (id > 0)
@@ -39,28 +46,114 @@ public class CadEndereco extends javax.swing.JFrame {
             btnExcluir.setVisible(true);
         }
         
+        recuperaIdCidade();
+        
         setLocationRelativeTo(null);
         
         tfId.setEnabled(false);
+        
+        tfIdCidade.setVisible(false);
     }
-    
+
     private Boolean existeDadosTemporarios(){        
-        if(DadosTemporarios.temObject instanceof ModEndereco){
-            int id = ((ModEndereco) DadosTemporarios.temObject).getId();
-            String nome = ((ModEndereco) DadosTemporarios.temObject).getNome_rua();
+        if(DadosTemporarios.tempObject instanceof ModEndereco){
+            int id = ((ModEndereco) DadosTemporarios.tempObject).getId();
+            int idCidade = ((ModEndereco) DadosTemporarios.tempObject).getIdCidade();
+            String nomeRua = ((ModEndereco) DadosTemporarios.tempObject).getNomeRua();
+            String cep = ((ModEndereco) DadosTemporarios.tempObject).getCep();
+            String numeroResidencia = ((ModEndereco) DadosTemporarios.tempObject).getNumeroResidencia();
             
             tfId.setText(String.valueOf(id));
-            tfNome_rua.setText(nome);
+            tfIdCidade.setText(String.valueOf(idCidade));
+            tfRua.setText(nomeRua);
+            tfCep.setText(cep);
+            tfNumero.setText(numeroResidencia);
+            
+            jcbCidade.setSelectedIndex(idCidade - 1);
         
-            DadosTemporarios.temObject = null;
+            DadosTemporarios.tempObject = null;
             
             return true;
         }else
             return false;
     }
-    
-    
 
+    private void inserir(){
+        DaoEndereco daoEndereco = new DaoEndereco();
+        
+        if (daoEndereco.inserir(Integer.parseInt(tfId.getText()), Integer.parseInt(tfIdCidade.getText()), tfRua.getText(), tfCep.getText(), tfNumero.getText())){
+            JOptionPane.showMessageDialog(null, "Endereço salvo com sucesso!");
+            
+            tfId.setText(String.valueOf(daoEndereco.buscarProximoId()));
+            tfRua.setText("");
+            tfNumero.setText("");
+            tfCep.setText("");
+        }else{
+            JOptionPane.showMessageDialog(null, "Não foi possível salvar o endereço!");
+        }
+    }
+    
+    private void alterar(){
+        DaoEndereco daoEndereco = new DaoEndereco();
+        
+        if (daoEndereco.alterar(Integer.parseInt(tfId.getText()), Integer.parseInt(tfIdCidade.getText()), tfRua.getText(), tfCep.getText(), tfNumero.getText())){
+            JOptionPane.showMessageDialog(null, "Endereço alterada com sucesso!");
+            
+            tfRua.setText("");
+            tfNumero.setText("");
+            tfCep.setText("");
+        }else{
+            JOptionPane.showMessageDialog(null, "Não foi possível alterar o endereço!");
+        }
+        
+        ((ListEstado) Formularios.listEstado).listarTodos();
+        
+        dispose();
+    }
+    
+    private void excluir(){
+        DaoPais daoPais = new DaoPais();
+        
+        if (daoPais.excluir(Integer.parseInt(tfId.getText()))){
+            JOptionPane.showMessageDialog(null, "Endereço excluído com sucesso!");
+            
+            tfRua.setText("");
+            tfNumero.setText("");
+            tfCep.setText("");
+        }else{
+            JOptionPane.showMessageDialog(null, "Não foi possível excluir o endereço!");
+        }
+        
+        ((ListCidade) Formularios.listCidade).listarTodos();
+        
+        dispose();
+    }
+    
+    private void carregarCidades(){
+        try{
+            DaoCidade daoCidade = new DaoCidade();
+
+            ResultSet resultSet = daoCidade.listarTodos();
+
+            while(resultSet.next())
+                jcbCidade.addItem(resultSet.getString("CIDADE"));
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    private void recuperaIdCidade(){
+        try{
+            DaoCidade daoCidade = new DaoCidade();
+            ResultSet resultSet = daoCidade.listarPorNome(jcbCidade.getSelectedItem().toString());
+            
+            resultSet.next();
+            tfIdCidade.setText(resultSet.getString("ID"));
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -74,27 +167,40 @@ public class CadEndereco extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         tfId = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        tfNome_rua = new javax.swing.JTextField();
+        jcbCidade = new javax.swing.JComboBox<>();
+        jLabel3 = new javax.swing.JLabel();
+        tfRua = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        tfCep = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        tfNumero = new javax.swing.JTextField();
         btnAcao = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
-        tfId_Cidade = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        tfNumero_residencia = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        tfCep = new javax.swing.JTextField();
+        tfIdCidade = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        jLabel1.setText("ID");
-
-        tfId.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfIdActionPerformed(evt);
+        setTitle("Cadastro de endereço");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
             }
         });
 
-        jLabel2.setText("Nome da rua");
+        jLabel1.setText("ID");
+
+        jLabel2.setText("Cidade");
+
+        jcbCidade.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jcbCidadeItemStateChanged(evt);
+            }
+        });
+
+        jLabel3.setText("Rua");
+
+        jLabel4.setText("CEP");
+
+        jLabel5.setText("Número");
 
         btnAcao.setText("Salvar");
         btnAcao.addActionListener(new java.awt.event.ActionListener() {
@@ -110,24 +216,6 @@ public class CadEndereco extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setText("ID_Cidade");
-
-        tfId_Cidade.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfId_CidadeActionPerformed(evt);
-            }
-        });
-
-        jLabel4.setText("Numero da residencia");
-
-        tfNumero_residencia.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tfNumero_residenciaActionPerformed(evt);
-            }
-        });
-
-        jLabel5.setText("CEP");
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -135,56 +223,59 @@ public class CadEndereco extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnAcao)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 169, Short.MAX_VALUE)
-                        .addComponent(btnExcluir)
-                        .addContainerGap())
+                    .addComponent(tfRua)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(tfId, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(tfId_Cidade, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(tfNome_rua, javax.swing.GroupLayout.Alignment.LEADING))
-                            .addComponent(jLabel1))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(tfNumero_residencia)
-                                    .addComponent(jLabel5)
-                                    .addComponent(tfCep, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))
-                                .addGap(0, 0, Short.MAX_VALUE))))))
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tfId, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                                    .addComponent(jcbCidade, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel2))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tfIdCidade, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tfCep, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(tfNumero, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(btnAcao)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnExcluir)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel4))
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tfNumero_residencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jcbCidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfIdCidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tfRua, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
+                    .addComponent(jLabel4)
                     .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tfId_Cidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tfCep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel2)
-                .addGap(18, 18, 18)
-                .addComponent(tfNome_rua, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(42, 42, 42)
+                    .addComponent(tfCep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfNumero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 105, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAcao)
                     .addComponent(btnExcluir))
@@ -204,99 +295,38 @@ public class CadEndereco extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tfIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfIdActionPerformed
-        // TODO add your handling code here:
-
-    }//GEN-LAST:event_tfIdActionPerformed
-
     private void btnAcaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcaoActionPerformed
-        // TODO add your handling code here:
         if (btnAcao.getText() == Constantes.BTN_SALVAR_TEXT)
             inserir();
         else if (btnAcao.getText() == Constantes.BTN_ALTERAR_TEXT)
             alterar();
     }//GEN-LAST:event_btnAcaoActionPerformed
 
+    private void jcbCidadeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbCidadeItemStateChanged
+        recuperaIdCidade();
+    }//GEN-LAST:event_jcbCidadeItemStateChanged
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        Formularios.cadEndereco = null;
+    }//GEN-LAST:event_formWindowClosed
+
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        // TODO add your handling code here:
-         int escolha = 
+        int escolha = 
                 JOptionPane.showConfirmDialog(
                         null, 
-                        "Deseja realmente excluir o país " + tfNome_rua.getText() + "?");
+                        "Deseja realmente excluir o endereço?");
         
         if(escolha == JOptionPane.YES_OPTION)
             excluir();
     }//GEN-LAST:event_btnExcluirActionPerformed
 
-    private void tfId_CidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfId_CidadeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tfId_CidadeActionPerformed
-
-    private void tfNumero_residenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfNumero_residenciaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tfNumero_residenciaActionPerformed
- 
-    private void inserir(){
-        DaoEndereco daoEndereco = new DaoEndereco();
-        
-        if (daoEndereco.inserir(Integer.parseInt(tfId.getText()),Integer.parseInt(tfId_Cidade.getText()), tfNome_rua.getText(), Integer.parseInt(tfCep.getText()), Integer.parseInt(tfNumero_residencia.getText()))){
-            JOptionPane.showMessageDialog(null, "País salvo com sucesso!");
-            
-            tfId.setText("");
-            tfId_Cidade.setText("");
-            tfNome_rua.setText("");
-            tfNumero_residencia.setText("");
-            tfCep.setText("");
-        }else{
-            JOptionPane.showMessageDialog(null, "Não foi possível salvar o País!");
-        }
-    }
-    
-    private void alterar(){
-        DaoEndereco daoEndereco = new DaoEndereco();
-        
-        if (daoEndereco.inserir(Integer.parseInt(tfId.getText()),Integer.parseInt(tfId_Cidade.getText()), tfNome_rua.getText(), Integer.parseInt(tfCep.getText()), Integer.parseInt(tfNumero_residencia.getText()))){
-            JOptionPane.showMessageDialog(null, "País alterada com sucesso!");
-            
-            tfId.setText("");
-            tfId_Cidade.setText("");
-            tfNome_rua.setText("");
-            tfNumero_residencia.setText("");
-            tfCep.setText("");
-        }else{
-            JOptionPane.showMessageDialog(null, "Não foi possível alterar a país!");
-        }
-        
-        ((ListEndereco) Formularios.listEndereco).listarTodos();
-        
-        dispose();
-    }
-    
-    private void excluir(){
-        DaoEndereco daoEndereco = new DaoEndereco();
-        
-        if (daoEndereco.excluir(Integer.parseInt(tfId.getText()))){
-            JOptionPane.showMessageDialog(null, "País " + tfNome_rua.getText() + " excluído com sucesso!");
-            
-            tfId.setText("");
-            tfNome_rua.setText("");
-
-        }else{
-            JOptionPane.showMessageDialog(null, "Não foi possível excluir o País!");
-        }
-        
-        ((ListEndereco) Formularios.listEndereco).listarTodos();
-        
-        dispose();
-    }
-    
     /**
      * @param args the command line arguments
      */
@@ -323,69 +353,6 @@ public class CadEndereco extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(CadEndereco.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -404,10 +371,11 @@ public class CadEndereco extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JComboBox<String> jcbCidade;
     private javax.swing.JTextField tfCep;
     private javax.swing.JTextField tfId;
-    private javax.swing.JTextField tfId_Cidade;
-    private javax.swing.JTextField tfNome_rua;
-    private javax.swing.JTextField tfNumero_residencia;
+    public javax.swing.JTextField tfIdCidade;
+    private javax.swing.JTextField tfNumero;
+    private javax.swing.JTextField tfRua;
     // End of variables declaration//GEN-END:variables
 }

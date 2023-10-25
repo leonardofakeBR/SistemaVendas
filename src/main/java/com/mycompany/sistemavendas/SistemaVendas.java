@@ -5,18 +5,20 @@
 package com.mycompany.sistemavendas;
 
 import com.mycompany.ferramentas.BancoDeDadosMySql;
+import com.mycompany.dao.DaoCategoria;
+import com.mycompany.ferramentas.Formularios;
 import com.mycompany.visao.outros.MenuPrincipal;
+import java.sql.Connection;
 
 /**
  *
- * @author leonardo.35903
+ * @author jose_
  */
 public class SistemaVendas {
-
     public static void main(String[] args) {
-        BancoDeDadosMySql.conectar();
-        MenuPrincipal menuprincipal = new MenuPrincipal();
+                if (Formularios.MenuPrincipal == null)
+            Formularios.MenuPrincipal = new MenuPrincipal();
         
-        menuprincipal.setVisible(true);
+        Formularios.MenuPrincipal.setVisible(true);
     }
 }

@@ -12,11 +12,11 @@ import java.sql.SQLException;
 
 /**
  *
- * @author leonardo.35903
+ * @author jose_
  */
 public class BancoDeDadosMySql {
-    private static final String URL = 
-            "jdbc:mysql://localhost:3306/bancodedadosleonardo?useSSL=false&allowPublicKeyRetrieval=true";
+    // Configurações do banco de dados
+    private static final String URL = "jdbc:mysql://localhost:3306/bancodedadosleonardo?useSSL=false&allowPublicKeyRetrieval=true";
     
     private static final String USUARIO = "root";
     private static final String SENHA = "admin";
@@ -24,32 +24,34 @@ public class BancoDeDadosMySql {
     private static Connection conexao = null;
     private static PreparedStatement statement = null;
     private static ResultSet resultado = null;
-    
+
     public static Connection obterConexao() {
         conexao = null;
-        try{
+        try {
+            // Carrega o driver JDBC
             Class.forName("com.mysql.cj.jdbc.Driver");
             
+            // Obtém a conexão com o banco de dados
             conexao = DriverManager.getConnection(URL, USUARIO, SENHA);
-        }catch (ClassNotFoundException e) {
-            System.err.println("Erro ao carregar o drive JDBC: " + e.getMessage());
-        }catch (SQLException e) {
-            System.err.println("Erro ao obter a conexão com o banco de dados: " + e.getMessage());            
+        } catch (ClassNotFoundException e) {
+            System.err.println("Erro ao carregar o driver JDBC: " + e.getMessage());
+        } catch (SQLException e) {
+            System.err.println("Erro ao obter a conexão com o banco de dados: " + e.getMessage());
         }
         return conexao;
     }
-    
+
     public static void fecharConexao(Connection conexao) {
-        if (conexao != null){
-            try{
+        if (conexao != null) {
+            try {
                 conexao.close();
-            }catch (SQLException e){
+            } catch (SQLException e) {
                 System.err.println("Erro ao fechar a conexão com o banco de dados: " + e.getMessage());
             }
         }
     }
     
-    public static boolean conectar() {
+    public static boolean conectar(){
         setConexao(BancoDeDadosMySql.obterConexao());
         
         if (getConexao() != null){
@@ -60,27 +62,27 @@ public class BancoDeDadosMySql {
         }
     }
     
-    public static Connection getConexao(){
+    public static Connection getConexao() {
         return conexao;
     }
-    
+
     public static void setConexao(Connection conexao) {
         BancoDeDadosMySql.conexao = conexao;
     }
-    
+
     public static PreparedStatement getStatement() {
         return statement;
     }
-    
+
     public static void setStatement(PreparedStatement statement) {
         BancoDeDadosMySql.statement = statement;
     }
-    
+
     public static ResultSet getResultado() {
         return resultado;
     }
-    
-    public static void setResultado(ResultSet resultado){
+
+    public static void setResultado(ResultSet resultado) {
         BancoDeDadosMySql.resultado = resultado;
     }
 }

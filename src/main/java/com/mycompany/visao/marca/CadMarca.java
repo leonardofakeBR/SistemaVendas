@@ -44,14 +44,14 @@ public class CadMarca extends javax.swing.JFrame {
     }
     
     private Boolean existeDadosTemporarios(){        
-        if(DadosTemporarios.temObject instanceof ModMarca){
-            int id = ((ModMarca) DadosTemporarios.temObject).getId();
-            String nome = ((ModMarca) DadosTemporarios.temObject).getNome();
+        if(DadosTemporarios.tempObject instanceof ModMarca){
+            int id = ((ModMarca) DadosTemporarios.tempObject).getId();
+            String nome = ((ModMarca) DadosTemporarios.tempObject).getNome();
             
             tfId.setText(String.valueOf(id));
             tfNome.setText(nome);
         
-            DadosTemporarios.temObject = null;
+            DadosTemporarios.tempObject = null;
             
             return true;
         }else

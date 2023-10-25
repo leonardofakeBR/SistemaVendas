@@ -2,33 +2,37 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.mycompany.visao.estado_civil;
+package com.mycompany.visao.estadocivil;
 
-import com.mycompany.visao.estado_civil.*;
-import com.mycompany.visao.estado_civil.*;
+import com.mycompany.visao.estadocivil.*;
+import com.mycompany.dao.DaoCategoria;
+import com.mycompany.dao.DaoEstadoCivil;
+import com.mycompany.dao.DaoEstadoCivil;
 import com.mycompany.ferramentas.Constantes;
 import com.mycompany.ferramentas.DadosTemporarios;
 import com.mycompany.ferramentas.Formularios;
-import com.mycompany.dao.DaoEstado_civil;
-import com.mycompany.modelo.ModEstado_civil;
+import com.mycompany.modelo.ModCategoria;
+import com.mycompany.modelo.ModEstadoCivil;
+import com.mycompany.visao.estadocivil.ListEstadoCivil;
 import javax.swing.JOptionPane;
+
 /**
  *
- * @author leonardo.35903
+ * @author jose_
  */
-public class CadEstado_civil extends javax.swing.JFrame {
+public class CadEstadoCivil extends javax.swing.JFrame {
 
     /**
-     * Creates new form ListCategoria
+     * Creates new form CadEstadoCivil
      */
-    public CadEstado_civil() {
+    public CadEstadoCivil() {
         initComponents();
         
-                if(!existeDadosTemporarios()){
-                    DaoEstado_civil daoEstado_civil = new DaoEstado_civil();
+        if(!existeDadosTemporarios()){
+            DaoEstadoCivil daoEstadoCivil = new DaoEstadoCivil();
 
-            int id = daoEstado_civil.buscarProximoId(); 
-            if (id > 0)
+            int id = daoEstadoCivil.buscarProximoId(); 
+            if (id >= 0)
                 tfId.setText(String.valueOf(id));
             
             btnAcao.setText(Constantes.BTN_SALVAR_TEXT);
@@ -42,24 +46,69 @@ public class CadEstado_civil extends javax.swing.JFrame {
         
         tfId.setEnabled(false);
     }
-    
+
     private Boolean existeDadosTemporarios(){        
-        if(DadosTemporarios.temObject instanceof ModEstado_civil){
-            int id = ((ModEstado_civil) DadosTemporarios.temObject).getId();
-            String nome = ((ModEstado_civil) DadosTemporarios.temObject).getNome();
+        if(DadosTemporarios.tempObject instanceof ModEstadoCivil){
+            int id = ((ModEstadoCivil) DadosTemporarios.tempObject).getId();
+            String nome = ((ModEstadoCivil) DadosTemporarios.tempObject).getNome();
             
             tfId.setText(String.valueOf(id));
             tfNome.setText(nome);
-        
-            DadosTemporarios.temObject = null;
+            
+            DadosTemporarios.tempObject = null;
             
             return true;
         }else
             return false;
     }
     
+    private void inserir(){
+        DaoEstadoCivil daoEstadoCivil = new DaoEstadoCivil();
+        
+        if (daoEstadoCivil.inserir(Integer.parseInt(tfId.getText()), tfNome.getText())){
+            JOptionPane.showMessageDialog(null, "EstadoCivil salvo com sucesso!");
+            
+            tfId.setText(String.valueOf(daoEstadoCivil.buscarProximoId()));
+            tfNome.setText("");
+        }else{
+            JOptionPane.showMessageDialog(null, "Não foi possível salvar o estado Civil!");
+        }
+    }
     
-
+    private void alterar(){
+        DaoEstadoCivil daoEstadoCivil = new DaoEstadoCivil();
+        
+        if (daoEstadoCivil.alterar(Integer.parseInt(tfId.getText()), tfNome.getText())){
+            JOptionPane.showMessageDialog(null, "EstadoCivil alterado com sucesso!");
+            
+            tfId.setText("");
+            tfNome.setText("");
+        }else{
+            JOptionPane.showMessageDialog(null, "Não foi possível alterar o estado Civil!");
+        }
+        
+        ((ListEstadoCivil) Formularios.listEstadoCivil).listarTodos();
+        
+        dispose();
+    }
+    
+    private void excluir(){
+        DaoEstadoCivil daoEstadoCivil = new DaoEstadoCivil();
+        
+        if (daoEstadoCivil.excluir(Integer.parseInt(tfId.getText()))){
+            JOptionPane.showMessageDialog(null, "Categoria " + tfNome.getText() + " excluída com sucesso!");
+            
+            tfId.setText("");
+            tfNome.setText("");
+        }else{
+            JOptionPane.showMessageDialog(null, "Não foi possível excluir a categoria!");
+        }
+        
+        ((ListEstadoCivil) Formularios.listEstadoCivil).listarTodos();
+        
+        dispose();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -78,6 +127,12 @@ public class CadEstado_civil extends javax.swing.JFrame {
         btnExcluir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Cadastro de pais");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         jLabel1.setText("ID");
 
@@ -110,22 +165,18 @@ public class CadEstado_civil extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tfNome, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(tfNome, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(btnAcao)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnExcluir))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(tfId, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
-                                .addGap(148, 148, 148)))
-                        .addContainerGap())))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnExcluir)))
+                        .addGap(0, 185, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -136,9 +187,9 @@ public class CadEstado_civil extends javax.swing.JFrame {
                 .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tfNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 165, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAcao)
                     .addComponent(btnExcluir))
@@ -156,9 +207,9 @@ public class CadEstado_civil extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -167,76 +218,38 @@ public class CadEstado_civil extends javax.swing.JFrame {
 
     private void tfIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfIdActionPerformed
         // TODO add your handling code here:
-
     }//GEN-LAST:event_tfIdActionPerformed
 
     private void btnAcaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcaoActionPerformed
-        // TODO add your handling code here:
-        if (btnAcao.getText() == Constantes.BTN_SALVAR_TEXT)
+        DaoEstadoCivil daoEstadoCivil = new DaoEstadoCivil();
+        
+        if (btnAcao.getText() == Constantes.BTN_SALVAR_TEXT){
             inserir();
-        else if (btnAcao.getText() == Constantes.BTN_ALTERAR_TEXT)
+            
+            tfId.setText(String.valueOf(daoEstadoCivil.buscarProximoId()));
+            tfNome.setText("");
+        }
+        else if (btnAcao.getText() == Constantes.BTN_ALTERAR_TEXT){
             alterar();
+            ((ListEstadoCivil) Formularios.listEstadoCivil).listarTodos();
+            dispose();
+        }
     }//GEN-LAST:event_btnAcaoActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        // TODO add your handling code here:
-         int escolha = 
+        int escolha = 
                 JOptionPane.showConfirmDialog(
                         null, 
-                        "Deseja realmente excluir o país " + tfNome.getText() + "?");
+                        "Deseja realmente excluir o estado civil " + tfNome.getText() + "?");
         
         if(escolha == JOptionPane.YES_OPTION)
             excluir();
     }//GEN-LAST:event_btnExcluirActionPerformed
- 
-    private void inserir(){
-        DaoEstado_civil daoEstado_civil = new DaoEstado_civil();
-        
-        if (daoEstado_civil.inserir(Integer.parseInt(tfId.getText()), tfNome.getText())){
-            JOptionPane.showMessageDialog(null, "País salvo com sucesso!");
-            
-            tfId.setText("");
-            tfNome.setText("");
-        }else{
-            JOptionPane.showMessageDialog(null, "Não foi possível salvar o País!");
-        }
-    }
-    
-    private void alterar(){
-        DaoEstado_civil daoEstado_civil = new DaoEstado_civil();
-        
-        if (daoEstado_civil.alterar(Integer.parseInt(tfId.getText()), tfNome.getText())){
-            JOptionPane.showMessageDialog(null, "País alterada com sucesso!");
-            
-            tfId.setText("");
-            tfNome.setText("");
-        }else{
-            JOptionPane.showMessageDialog(null, "Não foi possível alterar a país!");
-        }
-        
-        ((ListEstado_civil) Formularios.listEstado_civil).listarTodos();
-        
-        dispose();
-    }
-    
-    private void excluir(){
-        DaoEstado_civil daoEstado_civil = new DaoEstado_civil();
-        
-        if (daoEstado_civil.excluir(Integer.parseInt(tfId.getText()))){
-            JOptionPane.showMessageDialog(null, "País " + tfNome.getText() + " excluído com sucesso!");
-            
-            tfId.setText("");
-            tfNome.setText("");
 
-        }else{
-            JOptionPane.showMessageDialog(null, "Não foi possível excluir o País!");
-        }
-        
-        ((ListEstado_civil) Formularios.listEstado_civil).listarTodos();
-        
-        dispose();
-    }
-    
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        Formularios.cadEstadoCivil = null;
+    }//GEN-LAST:event_formWindowClosed
+
     /**
      * @param args the command line arguments
      */
@@ -254,35 +267,21 @@ public class CadEstado_civil extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CadEstado_civil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadEstadoCivil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CadEstado_civil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadEstadoCivil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CadEstado_civil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadEstadoCivil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CadEstado_civil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadEstadoCivil.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CadEstado_civil().setVisible(true);
+                new CadEstadoCivil().setVisible(true);
             }
         });
     }

@@ -4,17 +4,20 @@
  */
 package com.mycompany.modelo;
 
-
-public class ModEstado_civil {
+/**
+ *
+ * @author jose_
+ */
+public class ModCliente {
     private int id;
-    private String nome;
+    private int id_pessoa;
 
-    public ModEstado_civil() {
+    public ModCliente(int id, int id_pessoa) {
+        this.id = id;
+        this.id_pessoa = id_pessoa;
     }
 
-    public ModEstado_civil(int id, String nome) {
-        this.id = id;
-        this.nome = nome;
+    public ModCliente() {
     }
 
     public int getId() {
@@ -25,16 +28,16 @@ public class ModEstado_civil {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public int getId_pessoa() {
+        return id_pessoa;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setId_pessoa(int id_pessoa) {
+        this.id_pessoa = id_pessoa;
     }
 
     @Override
     public String toString() {
-        return "Categoria{" + "id=" + id + ", nome=" + nome + '}';
+        return "ModPais{" + "id=" + id + ", id_pessoa=" + id_pessoa + '}';
     }
 }

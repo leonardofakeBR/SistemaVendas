@@ -4,23 +4,24 @@
  */
 package com.mycompany.visao.endereco;
 
-import com.mycompany.visao.endereco.*;
-import com.mycompany.visao.endereco.*;
-import com.mycompany.visao.endereco.*;
+import com.mycompany.dao.DaoCidade;
 import com.mycompany.dao.DaoEndereco;
+import com.mycompany.dao.DaoEstado;
 import com.mycompany.ferramentas.DadosTemporarios;
+import com.mycompany.modelo.ModCidade;
 import com.mycompany.modelo.ModEndereco;
+import com.mycompany.visao.cidade.CadCidade;
 import java.sql.ResultSet;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author leonardo.35903
+ * @author jose_
  */
 public class ListEndereco extends javax.swing.JFrame {
 
     /**
-     * Creates new form CadEndereco
+     * Creates new form ListEndereco
      */
     public ListEndereco() {
         initComponents();
@@ -32,23 +33,25 @@ public class ListEndereco extends javax.swing.JFrame {
 
     public void listarTodos(){
         try{
+            //Pega o model da tabela definido no design
             DefaultTableModel defaultTableModel = (DefaultTableModel) tableEndereco.getModel();
             
             tableEndereco.setModel(defaultTableModel);
-            
+
             DaoEndereco daoEndereco = new DaoEndereco();
-            
+
+            //Atribui o resultset retornado a uma variável para ser usada.
             ResultSet resultSet = daoEndereco.listarTodos();
             
             defaultTableModel.setRowCount(0);
             while (resultSet.next()){
                 String id = resultSet.getString(1);
-                String id_pais = resultSet.getString(2);
-                String nome_rua = resultSet.getString(3);
-                String numero_rua = resultSet.getString(4);
-                String cep = resultSet.getString(5);
+                String cidade = resultSet.getString(2);
+                String rua = resultSet.getString(3);
+                String cep = resultSet.getString(4);
+                String numeroRes = resultSet.getString(5);
                 
-                defaultTableModel.addRow(new Object[]{id, id_pais, nome_rua, numero_rua, cep});
+                defaultTableModel.addRow(new Object[]{id, cidade, rua, cep, numeroRes});
             }
         }catch(Exception e){
             System.out.println(e.getMessage());
@@ -57,170 +60,139 @@ public class ListEndereco extends javax.swing.JFrame {
     
     public void listarPorId(int pId){
         try{
-            DefaultTableModel defaultTableModel = new DefaultTableModel();
-
-            defaultTableModel.addColumn("ID");
-            defaultTableModel.addColumn("ID_CIDADE");
-            defaultTableModel.addColumn("NOME DA RUA");
-            defaultTableModel.addColumn("NUMERO DA RESIDENCIA");
-            defaultTableModel.addColumn("CEP");
+            //Define o model da tabela.
+            DefaultTableModel defaultTableModel = (DefaultTableModel) tableEndereco.getModel();
 
             tableEndereco.setModel(defaultTableModel);
 
             DaoEndereco daoEndereco = new DaoEndereco();
 
+            //Atribui o resultset retornado a uma variável para ser usada.
             ResultSet resultSet = daoEndereco.listarPorId(pId);
             
             defaultTableModel.setRowCount(0);
             while (resultSet.next()){
                 String id = resultSet.getString(1);
-                String id_pais = resultSet.getString(2);
-                String nome_rua = resultSet.getString(3);
-                String numero_rua = resultSet.getString(4);
-                String cep = resultSet.getString(5);
+                String cidade = resultSet.getString(2);
+                String rua = resultSet.getString(3);
+                String cep = resultSet.getString(4);
+                String numeroRes = resultSet.getString(5);
                 
-                defaultTableModel.addRow(new Object[]{id, id_pais, nome_rua, numero_rua, cep});
+                defaultTableModel.addRow(new Object[]{id, cidade, rua, cep, numeroRes});
             }
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
     }
     
-        public void listarPorNome(String pNome){
+    public void listarPorCidade(String pCidade){
         try{
             //Define o model da tabela.
-            DefaultTableModel defaultTableModel = new DefaultTableModel();
-
-            defaultTableModel.addColumn("ID");
-            defaultTableModel.addColumn("ID_CIDADE");
-            defaultTableModel.addColumn("NOME DA RUA");
-            defaultTableModel.addColumn("NUMERO DA RESIDENCIA");
-            defaultTableModel.addColumn("CEP");
-
+            DefaultTableModel defaultTableModel = (DefaultTableModel) tableEndereco.getModel();
             
             tableEndereco.setModel(defaultTableModel);
 
             DaoEndereco daoEndereco = new DaoEndereco();
 
             //Atribui o resultset retornado a uma variável para ser usada.
-            ResultSet resultSet = daoEndereco.listarPorNome(pNome);
+            ResultSet resultSet = daoEndereco.listarPorCidade(pCidade);
             
             defaultTableModel.setRowCount(0);
             while (resultSet.next()){
                 String id = resultSet.getString(1);
-                String id_pais = resultSet.getString(2);
-                String nome_rua = resultSet.getString(3);
-                String numero_rua = resultSet.getString(4);
-                String cep = resultSet.getString(5);
+                String cidade = resultSet.getString(2);
+                String rua = resultSet.getString(3);
+                String cep = resultSet.getString(4);
+                String numeroRes = resultSet.getString(5);
                 
-                defaultTableModel.addRow(new Object[]{id, id_pais, nome_rua, numero_rua, cep});
+                defaultTableModel.addRow(new Object[]{id, cidade, rua, cep, numeroRes});
             }
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
     }
     
-    public void listarPorCidade(int pid_cidade){
+    public void listarPorNomeRua(String pNomeRua){
         try{
             //Define o model da tabela.
-            DefaultTableModel defaultTableModel = new DefaultTableModel();
-
-            defaultTableModel.addColumn("ID");
-            defaultTableModel.addColumn("ID_CIDADE");
-            defaultTableModel.addColumn("NOME DA RUA");
-            defaultTableModel.addColumn("NUMERO DA RESIDENCIA");
-            defaultTableModel.addColumn("CEP");
-
+            DefaultTableModel defaultTableModel = (DefaultTableModel) tableEndereco.getModel();
             
             tableEndereco.setModel(defaultTableModel);
 
             DaoEndereco daoEndereco = new DaoEndereco();
 
             //Atribui o resultset retornado a uma variável para ser usada.
-            ResultSet resultSet = daoEndereco.listarPorCidade(pid_cidade);
+            ResultSet resultSet = daoEndereco.listarPorNomeRua(pNomeRua);
             
             defaultTableModel.setRowCount(0);
             while (resultSet.next()){
                 String id = resultSet.getString(1);
-                String id_pais = resultSet.getString(2);
-                String nome_rua = resultSet.getString(3);
-                String numero_rua = resultSet.getString(4);
-                String cep = resultSet.getString(5);
+                String cidade = resultSet.getString(2);
+                String rua = resultSet.getString(3);
+                String cep = resultSet.getString(4);
+                String numeroRes = resultSet.getString(5);
                 
-                defaultTableModel.addRow(new Object[]{id, id_pais, nome_rua, numero_rua, cep});
+                defaultTableModel.addRow(new Object[]{id, cidade, rua, cep, numeroRes});
             }
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
     }
     
-    public void listarPorNumero_rua(int pnumero_rua){
+    public void listarPorCep(String pCep){
         try{
             //Define o model da tabela.
-            DefaultTableModel defaultTableModel = new DefaultTableModel();
-
-            defaultTableModel.addColumn("ID");
-            defaultTableModel.addColumn("ID_CIDADE");
-            defaultTableModel.addColumn("NOME DA RUA");
-            defaultTableModel.addColumn("NUMERO DA RESIDENCIA");
-            defaultTableModel.addColumn("CEP");
-
+            DefaultTableModel defaultTableModel = (DefaultTableModel) tableEndereco.getModel();
             
             tableEndereco.setModel(defaultTableModel);
 
             DaoEndereco daoEndereco = new DaoEndereco();
 
             //Atribui o resultset retornado a uma variável para ser usada.
-            ResultSet resultSet = daoEndereco.listarPorCidade(pnumero_rua);
+            ResultSet resultSet = daoEndereco.listarPorCep(pCep);
             
             defaultTableModel.setRowCount(0);
             while (resultSet.next()){
                 String id = resultSet.getString(1);
-                String id_pais = resultSet.getString(2);
-                String nome_rua = resultSet.getString(3);
-                String numero_rua = resultSet.getString(4);
-                String cep = resultSet.getString(5);
+                String cidade = resultSet.getString(2);
+                String rua = resultSet.getString(3);
+                String cep = resultSet.getString(4);
+                String numeroRes = resultSet.getString(5);
                 
-                defaultTableModel.addRow(new Object[]{id, id_pais, nome_rua, numero_rua, cep});
+                defaultTableModel.addRow(new Object[]{id, cidade, rua, cep, numeroRes});
             }
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
     }
     
-    public void listarPorCep(int pcep){
+    public void listarPorNumeroResidencia(String pNumeroResidencia){
         try{
             //Define o model da tabela.
-            DefaultTableModel defaultTableModel = new DefaultTableModel();
-
-            defaultTableModel.addColumn("ID");
-            defaultTableModel.addColumn("ID_CIDADE");
-            defaultTableModel.addColumn("NOME DA RUA");
-            defaultTableModel.addColumn("NUMERO DA RESIDENCIA");
-            defaultTableModel.addColumn("CEP");
-
+            DefaultTableModel defaultTableModel = (DefaultTableModel) tableEndereco.getModel();
             
             tableEndereco.setModel(defaultTableModel);
 
             DaoEndereco daoEndereco = new DaoEndereco();
 
             //Atribui o resultset retornado a uma variável para ser usada.
-            ResultSet resultSet = daoEndereco.listarPorCidade(pcep);
+            ResultSet resultSet = daoEndereco.listarPorNumeroResidencia(pNumeroResidencia);
             
             defaultTableModel.setRowCount(0);
             while (resultSet.next()){
                 String id = resultSet.getString(1);
-                String id_pais = resultSet.getString(2);
-                String nome_rua = resultSet.getString(3);
-                String numero_rua = resultSet.getString(4);
-                String cep = resultSet.getString(5);
+                String cidade = resultSet.getString(2);
+                String rua = resultSet.getString(3);
+                String cep = resultSet.getString(4);
+                String numeroRes = resultSet.getString(5);
                 
-                defaultTableModel.addRow(new Object[]{id, id_pais, nome_rua, numero_rua, cep});
+                defaultTableModel.addRow(new Object[]{id, cidade, rua, cep, numeroRes});
             }
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
-    }   
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -237,16 +209,17 @@ public class ListEndereco extends javax.swing.JFrame {
         tableEndereco = new javax.swing.JTable();
         btnBuscar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        jcbTipoFiltro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "TODOS", "ID", "ID_PAIS", "NOME", "UF" }));
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         tableEndereco.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "ID", "ID_CIDADE", "NOME DA RUA", "NUMERO DA RESIDENCIA", "CEP"
+                "ID", "CIDADE", "RUA", "CEP", "NUMERO RES."
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -257,37 +230,26 @@ public class ListEndereco extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tableEndereco.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableEnderecoMouseClicked(evt);
-            }
-        });
         jScrollPane1.setViewportView(tableEndereco);
 
         btnBuscar.setText("Buscar");
-        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jcbTipoFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(tfFiltro))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 816, Short.MAX_VALUE))
-                .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnBuscar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 540, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jcbTipoFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tfFiltro))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnBuscar)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -296,9 +258,9 @@ public class ListEndereco extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jcbTipoFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tfFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnBuscar)
                 .addContainerGap())
         );
@@ -309,22 +271,20 @@ public class ListEndereco extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        // TODO add your handling code here:
+ private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         switch (jcbTipoFiltro.getSelectedIndex()){
             case 0:
                 listarTodos();
@@ -333,28 +293,47 @@ public class ListEndereco extends javax.swing.JFrame {
                 listarPorId(Integer.parseInt(tfFiltro.getText()));
                 break;
             case 2:
-                listarPorCidade(Integer.parseInt(tfFiltro.getText()));
-                break;                
+                listarPorCidade(tfFiltro.getText());
+                break;
             case 3:
-                listarPorNome(tfFiltro.getText());
+                listarPorNomeRua(tfFiltro.getText());
+                break;
+            case 4:
+                listarPorCep(tfFiltro.getText());
+                break;
+            case 5:
+                listarPorNumeroResidencia(tfFiltro.getText());
                 break;
         }
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void tableEnderecoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableEnderecoMouseClicked
-        // TODO add your handling code here:
-         if (evt.getClickCount() == 2){
-             ModEndereco modEndereco = new ModEndereco();
+        try{
+            if (evt.getClickCount() == 2){
+                ModEndereco modEndereco = new ModEndereco();
 
-            modEndereco.setId(Integer.parseInt(String.valueOf(tableEndereco.getValueAt(tableEndereco.getSelectedRow(), 0))));
-            modEndereco.setId_cidade(Integer.parseInt(String.valueOf(tableEndereco.getValueAt(tableEndereco.getSelectedRow(), 1))));
-            modEndereco.setNome_rua(String.valueOf(tableEndereco.getValueAt(tableEndereco.getSelectedRow(), 2)));
+                modEndereco.setId(Integer.parseInt(String.valueOf(tableEndereco.getValueAt(tableEndereco.getSelectedRow(), 0))));
+                modEndereco.setNomeRua(String.valueOf(tableEndereco.getValueAt(tableEndereco.getSelectedRow(), 2)));
+                modEndereco.setCep(String.valueOf(tableEndereco.getValueAt(tableEndereco.getSelectedRow(), 3)));
+                modEndereco.setNumeroResidencia(String.valueOf(tableEndereco.getValueAt(tableEndereco.getSelectedRow(), 4)));
+                
+                DaoCidade daoCidade = new DaoCidade();
+                ResultSet resultSet = daoCidade.listarPorNome(String.valueOf(tableEndereco.getValueAt(tableEndereco.getSelectedRow(), 1)));
 
-             DadosTemporarios.temObject = (ModEndereco) modEndereco;
+                int idEstado = -1;
+                while(resultSet.next())
+                    idEstado = resultSet.getInt("ID");
 
-            CadEndereco cadEndereco = new CadEndereco();
-            cadEndereco.setVisible(true);
-         }
+                modEndereco.setIdCidade(idEstado);
+                
+                DadosTemporarios.tempObject = (ModEndereco) modEndereco;
+
+                CadEndereco cadEndereco = new CadEndereco();
+                cadEndereco.setVisible(true);
+            }
+        }catch(Exception e){
+            System.err.println(e.getMessage());
+        }
     }//GEN-LAST:event_tableEnderecoMouseClicked
 
     /**
@@ -382,21 +361,6 @@ public class ListEndereco extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(ListEndereco.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */

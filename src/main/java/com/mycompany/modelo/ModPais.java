@@ -4,17 +4,20 @@
  */
 package com.mycompany.modelo;
 
-
+/**
+ *
+ * @author jose_
+ */
 public class ModPais {
     private int id;
     private String nome;
 
-    public ModPais() {
-    }
-
     public ModPais(int id, String nome) {
         this.id = id;
         this.nome = nome;
+    }
+
+    public ModPais() {
     }
 
     public int getId() {
@@ -35,6 +38,6 @@ public class ModPais {
 
     @Override
     public String toString() {
-        return "Categoria{" + "id=" + id + ", nome=" + nome + '}';
+        return "ModPais{" + "id=" + id + ", nome=" + nome + '}';
     }
 }

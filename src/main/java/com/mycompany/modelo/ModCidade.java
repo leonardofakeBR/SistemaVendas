@@ -4,35 +4,38 @@
  */
 package com.mycompany.modelo;
 
-
+/**
+ *
+ * @author 10156
+ */
 public class ModCidade {
     private int id;
-    private int id_estado;
+    private int idEstado;
     private String nome;
-    
+
     public ModCidade() {
     }
 
-    public ModCidade(int id, int id_estado, String nome,String uf) {
+    public ModCidade(int id, int idEstado, String nome) {
         this.id = id;
-        this.id_estado = id_estado;
-        this.nome = nome;     
+        this.idEstado = idEstado;
+        this.nome = nome;
     }
 
-    public int getId_estado() {
-        return id_estado;
-    }
-
-    public void setId_estado(int id_estado) {
-        this.id_estado = id_estado;
-    }
-    
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getIdEstado() {
+        return idEstado;
+    }
+
+    public void setIdEstado(int idEstado) {
+        this.idEstado = idEstado;
     }
 
     public String getNome() {
@@ -45,6 +48,6 @@ public class ModCidade {
 
     @Override
     public String toString() {
-        return "Categoria{" + "id=" + id + ", id_estado=" + id_estado + ", nome=" + nome + '}';
+        return "ModCidade{" + "id=" + id + ", idEstado=" + idEstado + ", nome=" + nome + '}';
     }
 }

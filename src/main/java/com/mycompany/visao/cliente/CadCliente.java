@@ -2,15 +2,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.mycompany.visao.estado;
+package com.mycompany.visao.cliente;
 
-import com.mycompany.dao.DaoEstado;
-import com.mycompany.dao.DaoPais;
+import com.mycompany.visao.cliente.*;
 import com.mycompany.ferramentas.Constantes;
 import com.mycompany.ferramentas.DadosTemporarios;
+import com.mycompany.dao.DaoCliente;
+import com.mycompany.dao.DaoPessoa;
+import com.mycompany.dao.DaoPais;
 import com.mycompany.ferramentas.Formularios;
-import com.mycompany.modelo.ModEstado;
-import com.mycompany.visao.cidade.ListCidade;
+import com.mycompany.modelo.ModCliente;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 
@@ -18,20 +19,20 @@ import javax.swing.JOptionPane;
  *
  * @author 10156
  */
-public class CadEstado extends javax.swing.JFrame {
+public class CadCliente extends javax.swing.JFrame {
 
     /**
-     * Creates new form CadEstado
+     * Creates new form CadCliente
      */
-    public CadEstado() {
+    public CadCliente() {
         initComponents();
         
-        carregarPaises();
+        carregarPessoas();
         
         if(!existeDadosTemporarios()){
-            DaoEstado daoEstado = new DaoEstado();
+            DaoCliente daoCliente = new DaoCliente();
 
-            int id = daoEstado.buscarProximoId(); 
+            int id = daoCliente.buscarProximoId(); 
             if (id > 0)
                 tfId.setText(String.valueOf(id));
             
@@ -42,43 +43,37 @@ public class CadEstado extends javax.swing.JFrame {
             btnExcluir.setVisible(true);
         }
         
-        recuperaIdPais();
+        recuperaIdPessoa();
         
         setLocationRelativeTo(null);
         
         tfId.setEnabled(false);
         
-        tfIdPais.setVisible(false);
+        tfIdPessoa.setVisible(false);
     }
-    
+
     private Boolean existeDadosTemporarios(){        
-        if(DadosTemporarios.tempObject instanceof ModEstado){
-            int id = ((ModEstado) DadosTemporarios.tempObject).getId();
-            int idPais = ((ModEstado) DadosTemporarios.tempObject).getIdPais();
-            String nome = ((ModEstado) DadosTemporarios.tempObject).getNome();
-            String uf = ((ModEstado) DadosTemporarios.tempObject).getUf();
+        if(DadosTemporarios.tempObject instanceof ModCliente){
+            int id = ((ModCliente) DadosTemporarios.tempObject).getId();
+            int id_pessoa = ((ModCliente) DadosTemporarios.tempObject).getId_pessoa();
             
             tfId.setText(String.valueOf(id));
-            tfIdPais.setText(String.valueOf(idPais));
-            tfNome.setText(nome);
-            tfUf.setText(uf);
+            tfIdPessoa.setText(String.valueOf(id_pessoa));
             
-            //
             try{
-                DaoPais daoPais = new DaoPais();
-                ResultSet resultSet = daoPais.listarPorId(idPais);
+                DaoPessoa daoPessoa = new DaoPessoa();
+                ResultSet resultSet = daoPessoa.listarPorId(id_pessoa);
                 resultSet.next();
-                String pais = resultSet.getString("NOME");
+                String pais = resultSet.getString("ESTADO");
                 int index = 0;
-                for(int i = 0; i < jcbPais.getItemCount(); i++){
-                    if(jcbPais.getItemAt(i).equals(pais)){
+                for(int i = 0; i < jcbPessoa.getItemCount(); i++){
+                    if(jcbPessoa.getItemAt(i).equals(pais)){
                         index = i;
                         break;
                     }
                 }
-                jcbPais.setSelectedIndex(index);
+                jcbPessoa.setSelectedIndex(index);
             }catch(Exception e){}
-            //
             
             DadosTemporarios.tempObject = null;
             
@@ -86,82 +81,78 @@ public class CadEstado extends javax.swing.JFrame {
         }else
             return false;
     }
-
+    
     private void inserir(){
-        DaoEstado daoEstado = new DaoEstado();
+        DaoCliente daoCliente = new DaoCliente();
         
-        if (daoEstado.inserir(Integer.parseInt(tfId.getText()), Integer.parseInt(tfIdPais.getText()), tfNome.getText(), tfUf.getText())){
-            JOptionPane.showMessageDialog(null, "Estado salvo com sucesso!");
+        if (daoCliente.inserir(Integer.parseInt(tfId.getText()), Integer.parseInt(tfIdPessoa.getText()))){
+            JOptionPane.showMessageDialog(null, "Cliente salva com sucesso!");
             
-            tfId.setText(String.valueOf(daoEstado.buscarProximoId()));
-            tfNome.setText("");
-            tfUf.setText("");
+            tfId.setText(String.valueOf(daoCliente.buscarProximoId())); 
         }else{
-            JOptionPane.showMessageDialog(null, "Não foi possível salvar o estado!");
+            JOptionPane.showMessageDialog(null, "Não foi possível salvar o cliente!");
         }
     }
     
     private void alterar(){
-        DaoEstado daoEstado = new DaoEstado();
+        DaoCliente daoCliente = new DaoCliente();
         
-        if (daoEstado.alterar(Integer.parseInt(tfId.getText()), Integer.parseInt(tfIdPais.getText()), tfNome.getText(), tfUf.getText())){
-            JOptionPane.showMessageDialog(null, "Estado alterada com sucesso!");
+        if (daoCliente.alterar(Integer.parseInt(tfId.getText()),Integer.parseInt(tfIdPessoa.getText()))){
+            JOptionPane.showMessageDialog(null, "Cliente alterada com sucesso!");
             
             tfId.setText("");
-            tfIdPais.setText("");
-            tfNome.setText("");
-            tfUf.setText("");
+            tfIdPessoa.setText("");
         }else{
-            JOptionPane.showMessageDialog(null, "Não foi possível alterar o estado!");
+            JOptionPane.showMessageDialog(null, "Não foi possível alterar o cliente!");
         }
         
-        ((ListEstado) Formularios.listEstado).listarTodos();
+        ((ListCliente) Formularios.listCliente).listarTodos();
         
         dispose();
     }
     
     private void excluir(){
-        DaoPais daoPais = new DaoPais();
+        DaoCliente daoCliente = new DaoCliente();
         
-        if (daoPais.excluir(Integer.parseInt(tfId.getText()))){
-            JOptionPane.showMessageDialog(null, "Estado " + tfNome.getText() + " excluída com sucesso!");
+        if (daoCliente.excluir(Integer.parseInt(tfId.getText()))){
+            JOptionPane.showMessageDialog(null, "Cliente " + tfId.getText() + " excluído com sucesso!");
             
             tfId.setText("");
-            tfNome.setText("");
+            tfIdPessoa.setText("");
         }else{
-            JOptionPane.showMessageDialog(null, "Não foi possível excluir o estado!");
+            JOptionPane.showMessageDialog(null, "Não foi possível excluir o cliente!");
         }
         
-        ((ListCidade) Formularios.listCidade).listarTodos();
+        ((ListCliente) Formularios.listCliente).listarTodos();
         
         dispose();
     }
     
-    private void carregarPaises(){
+    private void carregarPessoas(){
         try{
-            DaoPais daoPais = new DaoPais();
+            DaoPessoa daoPessoa = new DaoPessoa();
 
-            ResultSet resultSet = daoPais.listarTodos();
+            ResultSet resultSet = daoPessoa.listarTodos();
 
-            while(resultSet.next())
-                jcbPais.addItem(resultSet.getString("NOME"));
+            while(resultSet.next()){
+                jcbPessoa.addItem(resultSet.getString("ESTADO"));
+            }
         }catch(Exception e){
-            System.out.println(e.getMessage());
+            
         }
     }
     
-    private void recuperaIdPais(){
+    private void recuperaIdPessoa(){
         try{
-            DaoPais daoPais = new DaoPais();
-            ResultSet resultSet = daoPais.listarPorNome(jcbPais.getSelectedItem().toString());
+            DaoPessoa daoPessoa = new DaoPessoa();
+            ResultSet resultSet = daoPessoa.listarPorNome(jcbPessoa.getSelectedItem().toString());
             
             resultSet.next();
-            tfIdPais.setText(resultSet.getString("ID"));
+            tfIdPessoa.setText(resultSet.getString("ID"));
         }catch(Exception e){
-            JOptionPane.showMessageDialog(null, e.getMessage());
+            System.out.println(e.getMessage());            
         }
     }
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -174,18 +165,14 @@ public class CadEstado extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         tfId = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        tfNome = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jcbPais = new javax.swing.JComboBox<>();
-        tfIdPais = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        tfUf = new javax.swing.JTextField();
+        jcbPessoa = new javax.swing.JComboBox<>();
         btnAcao = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
+        tfIdPessoa = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Cadastro de estado");
+        setTitle("Cadastro de cidade");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
@@ -194,17 +181,18 @@ public class CadEstado extends javax.swing.JFrame {
 
         jLabel1.setText("ID");
 
-        jLabel2.setText("Nome");
+        jLabel3.setText("Pessoa");
 
-        jLabel3.setText("Pais");
-
-        jcbPais.addItemListener(new java.awt.event.ItemListener() {
+        jcbPessoa.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jcbPaisItemStateChanged(evt);
+                jcbPessoaItemStateChanged(evt);
             }
         });
-
-        jLabel4.setText("UF");
+        jcbPessoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbPessoaActionPerformed(evt);
+            }
+        });
 
         btnAcao.setText("Salvar");
         btnAcao.addActionListener(new java.awt.event.ActionListener() {
@@ -220,6 +208,12 @@ public class CadEstado extends javax.swing.JFrame {
             }
         });
 
+        tfIdPessoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfIdPessoaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -227,26 +221,18 @@ public class CadEstado extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tfNome)
+                    .addComponent(jLabel1)
+                    .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel1)
-                                    .addComponent(tfId, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jcbPais, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tfIdPais, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel4)
-                            .addComponent(tfUf, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btnAcao)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnExcluir)))
-                        .addGap(0, 394, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(btnAcao)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnExcluir))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jcbPessoa, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(tfIdPessoa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -259,17 +245,9 @@ public class CadEstado extends javax.swing.JFrame {
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jcbPais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tfIdPais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tfNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tfUf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 158, Short.MAX_VALUE)
+                    .addComponent(jcbPessoa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfIdPessoa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAcao)
                     .addComponent(btnExcluir))
@@ -296,9 +274,9 @@ public class CadEstado extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jcbPaisItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbPaisItemStateChanged
-        recuperaIdPais();
-    }//GEN-LAST:event_jcbPaisItemStateChanged
+    private void tfIdPessoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfIdPessoaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfIdPessoaActionPerformed
 
     private void btnAcaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcaoActionPerformed
         if (btnAcao.getText() == Constantes.BTN_SALVAR_TEXT)
@@ -307,19 +285,27 @@ public class CadEstado extends javax.swing.JFrame {
             alterar();
     }//GEN-LAST:event_btnAcaoActionPerformed
 
+    private void jcbPessoaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbPessoaItemStateChanged
+        recuperaIdPessoa();
+    }//GEN-LAST:event_jcbPessoaItemStateChanged
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        Formularios.cadCliente = null;
+    }//GEN-LAST:event_formWindowClosed
+
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         int escolha = 
                 JOptionPane.showConfirmDialog(
                         null, 
-                        "Deseja realmente excluir o estado " + tfNome.getText() + "?");
+                        "Deseja realmente excluir o cliente " + tfId.getText() + "?");
         
         if(escolha == JOptionPane.YES_OPTION)
             excluir();
     }//GEN-LAST:event_btnExcluirActionPerformed
 
-    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        Formularios.cadCidade = null;
-    }//GEN-LAST:event_formWindowClosed
+    private void jcbPessoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbPessoaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jcbPessoaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -338,20 +324,21 @@ public class CadEstado extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CadEstado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CadEstado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CadEstado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CadEstado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CadEstado().setVisible(true);
+                new CadCliente().setVisible(true);
             }
         });
     }
@@ -360,14 +347,10 @@ public class CadEstado extends javax.swing.JFrame {
     private javax.swing.JButton btnAcao;
     private javax.swing.JButton btnExcluir;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JComboBox<String> jcbPais;
+    private javax.swing.JComboBox<String> jcbPessoa;
     private javax.swing.JTextField tfId;
-    private javax.swing.JTextField tfIdPais;
-    private javax.swing.JTextField tfNome;
-    private javax.swing.JTextField tfUf;
+    private javax.swing.JTextField tfIdPessoa;
     // End of variables declaration//GEN-END:variables
 }

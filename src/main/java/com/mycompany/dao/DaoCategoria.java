@@ -133,10 +133,10 @@ public class DaoCategoria extends BancoDeDadosMySql{
     }
     
     public int buscarProximoId(){
-        int id = -1;
+        int id = 0;
         
         try{
-            sql = "SELECT MAX(ID) + 1 FROM CATEGORIA";
+            sql = "SELECT IFNULL(MAX(ID), 0) + 1 FROM CATEGORIA";
             
             setStatement(getConexao().prepareStatement(sql));
             

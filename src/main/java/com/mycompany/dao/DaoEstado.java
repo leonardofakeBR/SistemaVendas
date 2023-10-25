@@ -5,29 +5,24 @@
 package com.mycompany.dao;
 
 import com.mycompany.ferramentas.BancoDeDadosMySql;
-import static com.mycompany.ferramentas.BancoDeDadosMySql.getConexao;
-import static com.mycompany.ferramentas.BancoDeDadosMySql.getResultado;
-import static com.mycompany.ferramentas.BancoDeDadosMySql.getStatement;
-import static com.mycompany.ferramentas.BancoDeDadosMySql.setResultado;
-import static com.mycompany.ferramentas.BancoDeDadosMySql.setStatement;
 import java.sql.ResultSet;
 
 /**
  *
- * @author jose_
+ * @author 10156
  */
 public class DaoEstado extends BancoDeDadosMySql{
     
-    private String sql; 
+    String sql;
     
-    public Boolean inserir(int id, int id_pais, String nome, String uf){
+    public Boolean inserir(int id, int idPais, String nome, String uf){
         try{
             sql = "INSERT INTO ESTADO (ID, ID_PAIS, NOME, UF) VALUES (?, ?, ?, ?)";
             
             setStatement(getConexao().prepareStatement(sql));
             
             getStatement().setInt(1, id);
-            getStatement().setInt(2, id_pais);
+            getStatement().setInt(2, idPais);
             getStatement().setString(3, nome);
             getStatement().setString(4, uf);
             
@@ -40,16 +35,16 @@ public class DaoEstado extends BancoDeDadosMySql{
         }
     }
     
-    public Boolean alterar(int id, String novoNome, int novoId_pais, String novoUf){
+    public Boolean alterar(int id, int idNovoPais, String novoNome, String novaUf){
         try{
             sql = "UPDATE ESTADO SET ID_PAIS = ?, NOME = ?, UF = ? WHERE ID = ?";
             
             setStatement(getConexao().prepareStatement(sql));
             
-            getStatement().setInt(3, id);
-            getStatement().setInt(1, novoId_pais);
+            getStatement().setInt(4, id);
+            getStatement().setInt(1, idNovoPais);
             getStatement().setString(2, novoNome);
-            getStatement().setString(4, novoUf);
+            getStatement().setString(3, novaUf);
             
             getStatement().executeUpdate();
             
@@ -79,7 +74,16 @@ public class DaoEstado extends BancoDeDadosMySql{
     
     public ResultSet listarTodos(){
         try{
-            sql = "SELECT ID, ID_PAIS, NOME, UF FROM ESTADO";
+            sql = 
+                " SELECT                    " +
+                "   EST.ID,                 " +
+                "   PA.NOME AS PAIS,        " +
+                "   EST.NOME AS ESTADO,     " +
+                "   EST.UF                  " +
+                " FROM                      " +
+                "   ESTADO EST              " +
+                " JOIN PAIS PA ON           " +
+                "   PA.ID = EST.ID_PAIS     " ;
             
             setStatement(getConexao().prepareStatement(sql));
             
@@ -93,7 +97,18 @@ public class DaoEstado extends BancoDeDadosMySql{
     
     public ResultSet listarPorId(int id){
         try{
-            sql = "SELECT ID, ID_PAIS, NOME, UF FROM ESTADO WHERE ID = ?";
+            sql = 
+                " SELECT                    " +
+                "   EST.ID,                 " +
+                "   PA.NOME AS PAIS,        " +
+                "   EST.NOME AS ESTADO,     " +
+                "   EST.UF                  " +
+                " FROM                      " +
+                "   ESTADO EST              " +
+                " JOIN PAIS PA ON           " +
+                "   PA.ID = EST.ID_PAIS     " +
+                " WHERE                     " +
+                "   EST.ID = ?              " ;
             
             setStatement(getConexao().prepareStatement(sql));
             
@@ -109,7 +124,18 @@ public class DaoEstado extends BancoDeDadosMySql{
     
     public ResultSet listarPorNome(String nome){
         try{
-            sql = "SELECT ID, ID_PAIS, NOME, UF FROM ESTADO WHERE NOME LIKE ?";
+            sql = 
+                " SELECT                    " +
+                "   EST.ID,                 " +
+                "   PA.NOME AS PAIS,        " +
+                "   EST.NOME AS ESTADO,     " +
+                "   EST.UF                  " +
+                " FROM                      " +
+                "   ESTADO EST              " +
+                " JOIN PAIS PA ON           " +
+                "   PA.ID = EST.ID_PAIS     " +
+                " WHERE                     " +
+                "   EST.NOME LIKE ?         " ;
             
             setStatement(getConexao().prepareStatement(sql));
             
@@ -123,13 +149,24 @@ public class DaoEstado extends BancoDeDadosMySql{
         return getResultado();
     }
     
-    public ResultSet listarPorPais(int id_pais){
+    public ResultSet listarPorPais(String estado){
         try{
-            sql = "SELECT ID, ID_PAIS, NOME, UF FROM ESTADO WHERE ID_PAIS = ?";
+            sql = 
+                " SELECT                    " +
+                "   EST.ID,                 " +
+                "   PA.NOME AS PAIS,        " +
+                "   EST.NOME AS ESTADO,     " +
+                "   EST.UF                  " +
+                " FROM                      " +
+                "   ESTADO EST              " +
+                " JOIN PAIS PA ON           " +
+                "   PA.ID = EST.ID_PAIS     " +
+                " WHERE                     " +
+                "   PA.NOME LIKE ?             " ;
             
             setStatement(getConexao().prepareStatement(sql));
             
-            getStatement().setInt(1, id_pais);
+            getStatement().setString(1, estado + "%");
             
             setResultado(getStatement().executeQuery());
         }catch(Exception e){
@@ -139,13 +176,24 @@ public class DaoEstado extends BancoDeDadosMySql{
         return getResultado();
     }
     
-    public ResultSet listarPorUf(String uf){
+    public ResultSet listarPorUf(String estado){
         try{
-            sql = "SELECT ID, ID_PAIS, NOME, UF FROM ESTADO WHERE UF LIKE ?";
+            sql = 
+                " SELECT                    " +
+                "   EST.ID,                 " +
+                "   PA.NOME AS PAIS,        " +
+                "   EST.NOME AS ESTADO,     " +
+                "   EST.UF                  " +
+                " FROM                      " +
+                "   ESTADO EST              " +
+                " JOIN PAIS PA ON           " +
+                "   PA.ID = EST.ID_PAIS     " +
+                " WHERE                     " +
+                "   EST.UF LIKE ?           " ;
             
             setStatement(getConexao().prepareStatement(sql));
             
-            getStatement().setString(1, uf + "%");
+            getStatement().setString(1, estado + "%");
             
             setResultado(getStatement().executeQuery());
         }catch(Exception e){
@@ -159,7 +207,7 @@ public class DaoEstado extends BancoDeDadosMySql{
         int id = -1;
         
         try{
-            sql = "SELECT MAX(ID) + 1 FROM ESTADO";
+            sql = "SELECT IFNULL(MAX(ID), 0) + 1 FROM ESTADO";
             
             setStatement(getConexao().prepareStatement(sql));
             

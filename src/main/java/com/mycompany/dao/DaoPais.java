@@ -5,11 +5,6 @@
 package com.mycompany.dao;
 
 import com.mycompany.ferramentas.BancoDeDadosMySql;
-import static com.mycompany.ferramentas.BancoDeDadosMySql.getConexao;
-import static com.mycompany.ferramentas.BancoDeDadosMySql.getResultado;
-import static com.mycompany.ferramentas.BancoDeDadosMySql.getStatement;
-import static com.mycompany.ferramentas.BancoDeDadosMySql.setResultado;
-import static com.mycompany.ferramentas.BancoDeDadosMySql.setStatement;
 import java.sql.ResultSet;
 
 /**
@@ -17,7 +12,6 @@ import java.sql.ResultSet;
  * @author jose_
  */
 public class DaoPais extends BancoDeDadosMySql{
-    
     private String sql; 
     
     public Boolean inserir(int id, String nome){
@@ -44,7 +38,7 @@ public class DaoPais extends BancoDeDadosMySql{
             
             setStatement(getConexao().prepareStatement(sql));
             
-            getStatement().setInt(3, id);
+            getStatement().setInt(2, id);
             getStatement().setString(1, novoNome);
             
             getStatement().executeUpdate();
@@ -120,10 +114,10 @@ public class DaoPais extends BancoDeDadosMySql{
     }
     
     public int buscarProximoId(){
-        int id = -1;
+        int id = 0;
         
         try{
-            sql = "SELECT MAX(ID) + 1 FROM PAIS";
+            sql = "SELECT IFNULL(MAX(ID), 0) + 1 FROM PAIS";
             
             setStatement(getConexao().prepareStatement(sql));
             

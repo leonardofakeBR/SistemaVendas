@@ -6,8 +6,9 @@ package com.mycompany.ferramentas;
 
 /**
  *
- * @author leonardo.35903
+ * @author 10156
  */
 public class DadosTemporarios {
-    public static Object temObject;
+    public static Object tempObject;
+    public static Object tempObject2;
 }
