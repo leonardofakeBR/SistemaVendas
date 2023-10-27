@@ -230,6 +230,11 @@ public class ListEndereco extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tableEndereco.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableEnderecoMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tableEndereco);
 
         btnBuscar.setText("Buscar");

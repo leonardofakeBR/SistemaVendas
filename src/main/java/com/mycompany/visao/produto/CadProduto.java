@@ -8,7 +8,8 @@ import com.mycompany.visao.produto.*;
 import com.mycompany.dao.DaoCategoria;
 import com.mycompany.dao.DaoProduto;
 import com.mycompany.dao.DaoEstado;
-import com.mycompany.dao.DaoPais;
+import com.mycompany.dao.DaoMarca;
+import com.mycompany.dao.DaoProduto;
 import com.mycompany.ferramentas.Constantes;
 import com.mycompany.ferramentas.DadosTemporarios;
 import com.mycompany.ferramentas.Formularios;
@@ -33,6 +34,7 @@ public class CadProduto extends javax.swing.JFrame {
         initComponents();
         
         carregarCategorias();
+        carregarMarcas();
         
         if(!existeDadosTemporarios()){
             DaoProduto daoProduto = new DaoProduto();
@@ -49,12 +51,15 @@ public class CadProduto extends javax.swing.JFrame {
         }
         
         recuperaIdCategoria();
+        recuperaIdMarca();
         
         setLocationRelativeTo(null);
         
         tfId.setEnabled(false);
         
         tfIdCategoria.setVisible(false);
+        
+        tfIdMarca.setVisible(false);
     }
 
     private Boolean existeDadosTemporarios(){        
@@ -63,7 +68,7 @@ public class CadProduto extends javax.swing.JFrame {
             int idCategoria = ((ModProduto) DadosTemporarios.tempObject).getIdCategoria();
             String nome = ((ModProduto) DadosTemporarios.tempObject).getNome();
             String descricao = ((ModProduto) DadosTemporarios.tempObject).getDescricao();
-            int preco = ((ModProduto) DadosTemporarios.tempObject).getPreco();
+            Double preco = ((ModProduto) DadosTemporarios.tempObject).getPreco();
             
             tfId.setText(String.valueOf(id));
             tfIdCategoria.setText(String.valueOf(idCategoria));
@@ -83,29 +88,29 @@ public class CadProduto extends javax.swing.JFrame {
     private void inserir(){
         DaoProduto daoProduto = new DaoProduto();
         
-        if (daoProduto.inserir(Integer.parseInt(tfId.getText()), Integer.parseInt(tfIdCategoria.getText()),Integer.parseInt(tfIdMarca.getText()), tfNome.getText(), taDescricao.getText(), Integer.parseInt(tfPreco.getText()))){
-            JOptionPane.showMessageDialog(null, "Endereço salvo com sucesso!");
+        if (daoProduto.inserir(Integer.parseInt(tfId.getText()), Integer.parseInt(tfIdCategoria.getText()),Integer.parseInt(tfIdMarca.getText()), tfNome.getText(), taDescricao.getText(), Double.parseDouble(tfPreco.getText()))){
+            JOptionPane.showMessageDialog(null, "Produto salvo com sucesso!");
             
             tfId.setText(String.valueOf(daoProduto.buscarProximoId()));
             tfNome.setText("");
             tfPreco.setText("");
             taDescricao.setText("");
         }else{
-            JOptionPane.showMessageDialog(null, "Não foi possível salvar o endereço!");
+            JOptionPane.showMessageDialog(null, "Não foi possível salvar o Produto!");
         }
     }
     
     private void alterar(){
         DaoProduto daoProduto = new DaoProduto();
         
-        if (daoProduto.alterar(Integer.parseInt(tfId.getText()), Integer.parseInt(tfIdCategoria.getText()), Integer.parseInt(tfIdMarca.getText()), tfNome.getText(), taDescricao.getText(), Integer.parseInt(tfPreco.getText()))){
-            JOptionPane.showMessageDialog(null, "Endereço alterada com sucesso!");
+        if (daoProduto.alterar(Integer.parseInt(tfId.getText()), Integer.parseInt(tfIdCategoria.getText()), Integer.parseInt(tfIdMarca.getText()), tfNome.getText(), taDescricao.getText(), Double.parseDouble(tfPreco.getText()))){
+            JOptionPane.showMessageDialog(null, "Produto alterada com sucesso!");
             
             tfNome.setText("");
             tfPreco.setText("");
             taDescricao.setText("");
         }else{
-            JOptionPane.showMessageDialog(null, "Não foi possível alterar o endereço!");
+            JOptionPane.showMessageDialog(null, "Não foi possível alterar o Produto!");
         }
         
         ((ListEstado) Formularios.listEstado).listarTodos();
@@ -114,16 +119,16 @@ public class CadProduto extends javax.swing.JFrame {
     }
     
     private void excluir(){
-        DaoPais daoPais = new DaoPais();
+        DaoProduto daoProduto = new DaoProduto();
         
-        if (daoPais.excluir(Integer.parseInt(tfId.getText()))){
-            JOptionPane.showMessageDialog(null, "Endereço excluído com sucesso!");
+        if (daoProduto.excluir(Integer.parseInt(tfId.getText()))){
+            JOptionPane.showMessageDialog(null, "Produto excluído com sucesso!");
             
             tfNome.setText("");
             tfPreco.setText("");
             taDescricao.setText("");
         }else{
-            JOptionPane.showMessageDialog(null, "Não foi possível excluir o endereço!");
+            JOptionPane.showMessageDialog(null, "Não foi possível excluir o Produto!");
         }
         
         ((ListCategoria) Formularios.listCategoria).listarTodos();
@@ -138,7 +143,7 @@ public class CadProduto extends javax.swing.JFrame {
             ResultSet resultSet = daoCategoria.listarTodos();
 
             while(resultSet.next())
-                jcbCategoria.addItem(resultSet.getString("CIDADE"));
+                jcbCategoria.addItem(resultSet.getString("NOME"));
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
@@ -151,6 +156,31 @@ public class CadProduto extends javax.swing.JFrame {
             
             resultSet.next();
             tfIdCategoria.setText(resultSet.getString("ID"));
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+    }
+    
+        private void carregarMarcas(){
+        try{
+            DaoMarca daoMarca = new DaoMarca();
+
+            ResultSet resultSet = daoMarca.listarTodos();
+
+            while(resultSet.next())
+                jcbMarca.addItem(resultSet.getString("NOME"));
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    private void recuperaIdMarca(){
+        try{
+            DaoMarca daoMarca = new DaoMarca();
+            ResultSet resultSet = daoMarca.listarPorNome(jcbMarca.getSelectedItem().toString());
+            
+            resultSet.next();
+            tfIdMarca.setText(resultSet.getString("ID"));
         }catch(Exception e){
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
@@ -227,6 +257,17 @@ public class CadProduto extends javax.swing.JFrame {
             }
         });
 
+        jcbMarca.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jcbMarcaItemStateChanged(evt);
+            }
+        });
+        jcbMarca.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbMarcaActionPerformed(evt);
+            }
+        });
+
         jLabel6.setText("Marca");
 
         taDescricao.setColumns(20);
@@ -251,26 +292,26 @@ public class CadProduto extends javax.swing.JFrame {
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(btnExcluir))
                                 .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(tfId)
-                                        .addComponent(jcbCategoria, 0, 100, Short.MAX_VALUE)
-                                        .addComponent(jLabel2))
+                                        .addComponent(tfId, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel2)
+                                        .addComponent(jcbCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(tfIdCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(68, 68, 68)
+                                    .addGap(56, 56, 56)
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel6)
                                         .addGroup(jPanel1Layout.createSequentialGroup()
-                                            .addComponent(jcbMarca, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jcbMarca, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(tfIdMarca, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addComponent(jLabel6)))
+                                            .addComponent(tfIdMarca, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tfPreco, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 77, Short.MAX_VALUE)))
+                        .addGap(0, 27, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -348,7 +389,7 @@ public class CadProduto extends javax.swing.JFrame {
         int escolha = 
                 JOptionPane.showConfirmDialog(
                         null, 
-                        "Deseja realmente excluir o endereço?");
+                        "Deseja realmente excluir o Produto?");
         
         if(escolha == JOptionPane.YES_OPTION)
             excluir();
@@ -357,6 +398,15 @@ public class CadProduto extends javax.swing.JFrame {
     private void jcbCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbCategoriaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jcbCategoriaActionPerformed
+
+    private void jcbMarcaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbMarcaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jcbMarcaActionPerformed
+
+    private void jcbMarcaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbMarcaItemStateChanged
+        // TODO add your handling code here:
+        recuperaIdMarca();
+    }//GEN-LAST:event_jcbMarcaItemStateChanged
 
     /**
      * @param args the command line arguments

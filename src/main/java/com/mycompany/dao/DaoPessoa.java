@@ -484,6 +484,28 @@ public class DaoPessoa extends BancoDeDadosMySql{
         return getResultado();
     }
     
+        public ResultSet recuperaSenha(String usuario){
+        try{
+            sql = 
+                " SELECT                            " +
+                "   ID,                             " +
+                "   SENHA                           " +
+                " FROM                              " +
+                "   PESSOA                          " +
+                " WHERE USUARIO = ?                 " ;
+            
+            setStatement(getConexao().prepareStatement(sql));
+            
+            getStatement().setString(1, usuario);
+            
+            setResultado(getStatement().executeQuery());
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        
+        return getResultado();
+    }
+    
     public int buscarProximoId(){
         int id = -1;
         

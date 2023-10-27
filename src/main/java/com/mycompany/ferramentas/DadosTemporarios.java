@@ -11,4 +11,10 @@ package com.mycompany.ferramentas;
 public class DadosTemporarios {
     public static Object tempObject;
     public static Object tempObject2;
+    
+    public static int idUsuarioLogado;
+    public static String usuarioLogado;
+    
+    public static String categoriaProdutoVenda;
+    public static String marcaProdutoVenda;
 }

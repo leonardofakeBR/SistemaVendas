@@ -7,7 +7,7 @@ package com.mycompany.sistemavendas;
 import com.mycompany.ferramentas.BancoDeDadosMySql;
 import com.mycompany.dao.DaoCategoria;
 import com.mycompany.ferramentas.Formularios;
-import com.mycompany.visao.outros.MenuPrincipal;
+import com.mycompany.visao.outros.Empresa.MenuPrincipal;
 import java.sql.Connection;
 
 /**
@@ -16,9 +16,9 @@ import java.sql.Connection;
  */
 public class SistemaVendas {
     public static void main(String[] args) {
-                if (Formularios.MenuPrincipal == null)
-            Formularios.MenuPrincipal = new MenuPrincipal();
+                if (Formularios.menuPrincipalCliente == null)
+            Formularios.menuPrincipalCliente = new MenuPrincipal();
         
-        Formularios.MenuPrincipal.setVisible(true);
+        Formularios.menuPrincipalCliente.setVisible(true);
     }
 }

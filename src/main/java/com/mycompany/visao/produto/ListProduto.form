@@ -101,7 +101,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JTable" name="tableEndereco">
+            <Component class="javax.swing.JTable" name="tableProduto">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="5" rowCount="4">
@@ -109,10 +109,13 @@
                     <Column editable="false" title="CATEGORIA" type="java.lang.Object"/>
                     <Column editable="false" title="MARCA" type="java.lang.Object"/>
                     <Column editable="false" title="NOME" type="java.lang.Object"/>
-                    <Column editable="false" title="NUMERO RES." type="java.lang.Object"/>
+                    <Column editable="false" title="PRECO" type="java.lang.Object"/>
                   </Table>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tableProdutoMouseClicked"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

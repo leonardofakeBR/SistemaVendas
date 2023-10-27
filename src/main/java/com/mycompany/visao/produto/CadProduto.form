@@ -65,22 +65,22 @@
                                       <Component id="btnExcluir" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="jLabel1" alignment="0" min="-2" pref="37" max="-2" attributes="0"/>
-                                          <Component id="tfId" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="jcbCategoria" alignment="0" pref="100" max="32767" attributes="0"/>
+                                          <Component id="tfId" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
                                           <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jcbCategoria" min="-2" pref="133" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="tfIdCategoria" min="-2" pref="50" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="68" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="56" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                                           <Group type="102" attributes="0">
-                                              <Component id="jcbMarca" min="-2" pref="110" max="-2" attributes="0"/>
+                                              <Component id="jcbMarca" min="-2" pref="139" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Component id="tfIdMarca" min="-2" pref="41" max="-2" attributes="0"/>
                                           </Group>
-                                          <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <Component id="jLabel4" alignment="0" min="-2" pref="70" max="-2" attributes="0"/>
@@ -91,7 +91,7 @@
                               <Component id="tfPreco" min="-2" pref="100" max="-2" attributes="0"/>
                               <Component id="jLabel5" min="-2" pref="100" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="0" pref="77" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="27" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -211,6 +211,10 @@
               <StringArray count="0"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="jcbMarcaItemStateChanged"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jcbMarcaActionPerformed"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>

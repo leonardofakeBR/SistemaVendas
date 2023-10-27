@@ -14,9 +14,9 @@ public class ModProduto {
     private int idMarca;
     private String nome;
     private String descricao;
-    private int preco;
+    private Double preco;
 
-    public ModProduto(int id, int idCategoria, String nome, String descricao, int preco) {
+    public ModProduto(int id, int idCategoria, String nome, String descricao, Double preco) {
         this.id = id;
         this.idCategoria = idCategoria;
         this.nome = nome;
@@ -67,11 +67,11 @@ public class ModProduto {
         this.descricao = descricao;
     }
 
-    public int getPreco() {
+    public Double getPreco() {
         return preco;
     }
 
-    public void setPreco(int preco) {
+    public void setPreco(Double preco) {
         this.preco = preco;
     }
 

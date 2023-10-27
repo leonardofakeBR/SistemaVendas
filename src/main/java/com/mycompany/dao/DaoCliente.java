@@ -113,6 +113,28 @@ public class DaoCliente extends BancoDeDadosMySql{
         return getResultado();
     }
     
+     public ResultSet listarPorIdPessoa(int idPessoa){
+        try{
+            sql = 
+                " SELECT                            " +
+                "   ID AS ID,                       " +
+                "   ID_PESSOA AS CIDADE             " +
+                " FROM                              " +
+                "   CLIENTE                         " +
+                " WHERE ID_PESSOA = ?               " ;
+            
+            setStatement(getConexao().prepareStatement(sql));
+            
+            getStatement().setInt(1, idPessoa);
+            
+            setResultado(getStatement().executeQuery());
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        
+        return getResultado();
+    }
+    
     public int buscarProximoId(){
         int id = 0;
         
